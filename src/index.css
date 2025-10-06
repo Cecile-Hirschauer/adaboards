@@ -47,7 +47,49 @@
 
 @layer base {
   :root {
-    /* shadcn/ui variables (format RGB) */
+    /* Light mode - shadcn/ui variables (format RGB) */
+    --background: 255 255 255;           /* White background */
+    --foreground: 43 45 49;              /* Dark text */
+
+    --card: 255 255 255;                 /* White cards */
+    --card-foreground: 43 45 49;
+
+    --popover: 255 255 255;
+    --popover-foreground: 43 45 49;
+
+    --primary: 196 181 253;              /* --clr-primary */
+    --primary-foreground: 43 45 49;
+
+    --secondary: 240 240 245;            /* Light gray */
+    --secondary-foreground: 43 45 49;
+
+    --muted: 240 240 245;
+    --muted-foreground: 113 113 122;     /* --color-muted */
+
+    --accent: 240 240 245;
+    --accent-foreground: 43 45 49;
+
+    --destructive: 248 113 113;          /* --clr-error */
+    --destructive-foreground: 255 255 255;
+
+    --border: 228 228 231;               /* Light border */
+    --input: 228 228 231;                /* Light input */
+    --ring: 196 181 253;                 /* --clr-primary */
+
+    --radius: 0.5rem;
+
+    /* Light mode custom colors */
+    --color-gray-800: #f9fafb;           /* Light background */
+    --color-light: #111827;              /* Dark text for light mode */
+    --color-muted: #6b7280;
+    --color-disabled: #9ca3af;
+    --color-muted-background: #f3f4f6;
+    --color-border: #e5e7eb;
+    --color-input: #f9fafb;
+  }
+
+  .dark {
+    /* Dark mode - shadcn/ui variables (format RGB) */
     --background: 43 45 49;              /* --color-gray-800 */
     --foreground: 255 255 255;           /* --color-light */
 
@@ -77,6 +119,15 @@
     --ring: 196 181 253;                 /* --clr-primary */
 
     --radius: 0.5rem;
+
+    /* Dark mode custom colors */
+    --color-gray-800: #2b2d31;
+    --color-light: #ffffff;
+    --color-muted: #71717a;
+    --color-disabled: #52525b;
+    --color-muted-background: #3d3f45;
+    --color-border: #4a4c52;
+    --color-input: #383a3f;
   }
 
   * {
