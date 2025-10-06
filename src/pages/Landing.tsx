@@ -1,10 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
 
 const Landing = () => {
+  const navigate = useNavigate();
+
   const handleSignIn = () => {
-    // TODO: Navigate to sign in page
-    console.log("Navigate to sign in");
+    navigate("/boards");
+  };
+
+  const handleGetStarted = () => {
+    navigate("/boards");
   };
 
   return (
@@ -23,6 +29,7 @@ const Landing = () => {
             A simple, beautiful way to manage tasks and projects with your team
           </p>
           <button
+            onClick={handleGetStarted}
             className="px-6 sm:px-8 py-2.5 sm:py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] rounded-lg font-semibold text-sm sm:text-base hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-[rgb(var(--ring))] focus:ring-offset-2"
             aria-label="Get started with AdaBoards for free"
           >
