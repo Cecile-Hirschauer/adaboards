@@ -1,5 +1,7 @@
 // Board card component
 import type { Board } from '../../types';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 interface BoardCardProps {
   board: Board;
@@ -9,29 +11,53 @@ interface BoardCardProps {
 
 export default function BoardCard({ board, onOpen, onDelete }: BoardCardProps) {
   return (
-    <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-      <div className="card-body">
-        <h2 className="card-title">{board.title}</h2>
-        {board.description && (
-          <p className="text-base-content/70">{board.description}</p>
-        )}
-        <div className="card-actions justify-end mt-4">
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => onOpen(board.id)}
+    <article
+      className="bg-[rgb(var(--card))] text-[rgb(var(--card-foreground))] rounded-xl p-6 border border-[rgb(var(--border))] transition-all hover:border-[rgb(var(--primary))] hover:shadow-lg hover:-translate-y-1 cursor-pointer group"
+      onClick={() => onOpen(board.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onOpen(board.id);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Open board ${board.title}`}
+    >
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="text-xl font-bold text-[rgb(var(--foreground))] group-hover:text-[rgb(var(--primary))] transition-colors">
+          {board.title}
+        </h3>
+        {onDelete && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-[rgb(var(--destructive))]"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(board.id);
+            }}
+            aria-label={`Delete board ${board.title}`}
           >
-            Open
-          </button>
-          {onDelete && (
-            <button
-              className="btn btn-error btn-sm"
-              onClick={() => onDelete(board.id)}
-            >
-              Delete
-            </button>
-          )}
-        </div>
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        )}
       </div>
-    </div>
+
+      {board.description && (
+        <p className="text-[rgb(var(--muted-foreground))] text-sm leading-relaxed line-clamp-2">
+          {board.description}
+        </p>
+      )}
+
+      <div className="mt-4 flex items-center gap-2 text-xs text-[rgb(var(--muted-foreground))]">
+        <div className="flex gap-1">
+          <div className="w-2 h-2 rounded-full bg-[var(--clr-todo)]" aria-hidden="true"></div>
+          <div className="w-2 h-2 rounded-full bg-[var(--clr-doing)]" aria-hidden="true"></div>
+          <div className="w-2 h-2 rounded-full bg-[var(--clr-success)]" aria-hidden="true"></div>
+        </div>
+        <span>Tasks board</span>
+      </div>
+    </article>
   );
 }
