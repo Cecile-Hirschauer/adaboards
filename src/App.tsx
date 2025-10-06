@@ -2,6 +2,7 @@ import "./index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Boards from "./pages/Boards";
+import BoardView from "./pages/BoardView";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/boards" element={<Boards />} />
+        <Route path="/boards/:id" element={<BoardView />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
