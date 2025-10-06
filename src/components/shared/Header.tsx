@@ -1,4 +1,5 @@
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "@/components/shared/Logo";
 
 interface HeaderProps {
   showSignInButton?: boolean;
@@ -11,14 +12,10 @@ export const Header = ({ showSignInButton = true, onSignInClick }: HeaderProps) 
       {/* Logo */}
       <a
         href="/"
-        className="flex items-center gap-2 sm:gap-3 no-underline"
-        style={{ color: 'var(--color-light)' }}
+        className="flex items-center gap-2 sm:gap-3 no-underline text-[rgb(var(--foreground))] hover:opacity-80 transition-opacity"
         aria-label="AdaBoards Home"
       >
-        <div className="flex gap-1" aria-hidden="true">
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded" style={{ backgroundColor: 'var(--color-light)' }}></div>
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded" style={{ backgroundColor: 'var(--color-light)' }}></div>
-        </div>
+        <Logo className="w-6 h-6 sm:w-8 sm:h-8" />
         <span className="text-xl sm:text-2xl font-semibold">AdaBoards</span>
       </a>
 
