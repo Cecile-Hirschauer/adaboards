@@ -1,5 +1,6 @@
 // Boards page - displays user's boards
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/shared/Header';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
@@ -12,6 +13,7 @@ interface Board {
 }
 
 export default function Boards() {
+  const navigate = useNavigate();
   const [boards, setBoards] = useState<Board[]>([
     {
       id: '1',
@@ -60,8 +62,7 @@ export default function Boards() {
   };
 
   const handleOpenBoard = (id: string) => {
-    console.log('Open board:', id);
-    // TODO: Navigate to board view
+    navigate(`/boards/${id}`);
   };
 
   const userName = 'Ada Lovelace';

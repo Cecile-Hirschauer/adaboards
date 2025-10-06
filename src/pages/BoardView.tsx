@@ -1,45 +1,143 @@
-// Board view page - displays tasks in a board
+// Board view page - Kanban board with tasks
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { TaskStatus } from '@/types';
+import BoardHeader from '@/components/Board/BoardHeader';
+import Column from '@/components/Board/Column';
+
+interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
+}
+
 export default function BoardView() {
+  const navigate = useNavigate();
+  const [boardName] = useState('Dataviz');
+  const [filter, setFilter] = useState('');
+  const [tasks, setTasks] = useState<Task[]>([
+    {
+      id: '1',
+      title: "Appliquer l'asynchrone",
+      status: TaskStatus.TODO
+    },
+    {
+      id: '2',
+      title: "Se familiariser avec une bibliothèque d'animation graphique JavaScript",
+      status: TaskStatus.TODO
+    },
+    {
+      id: '3',
+      title: "Se poser la question de la durée de vie de son applicatif",
+      status: TaskStatus.IN_PROGRESS
+    },
+    {
+      id: '4',
+      title: "Manipuler du CSS et du HTML",
+      status: TaskStatus.DONE
+    },
+    {
+      id: '5',
+      title: "Mettre en place un environnement Web permettant de travailler en groupe sur le même projet",
+      status: TaskStatus.DONE
+    },
+    {
+      id: '6',
+      title: "Créer un repo commun et utiliser les commandes de base git",
+      status: TaskStatus.DONE
+    }
+  ]);
+
+  const handleBack = () => {
+    navigate('/boards');
+  };
+
+  const handleInvite = () => {
+    console.log('Open invite modal');
+  };
+
+  const handleMoveTask = (taskId: string, direction: 'left' | 'right') => {
+    setTasks(prevTasks => {
+      const taskIndex = prevTasks.findIndex(t => t.id === taskId);
+      if (taskIndex === -1) return prevTasks;
+
+      const task = prevTasks[taskIndex];
+      let newStatus = task.status;
+
+      if (direction === 'right') {
+        if (task.status === TaskStatus.TODO) newStatus = TaskStatus.IN_PROGRESS;
+        else if (task.status === TaskStatus.IN_PROGRESS) newStatus = TaskStatus.DONE;
+      } else {
+        if (task.status === TaskStatus.DONE) newStatus = TaskStatus.IN_PROGRESS;
+        else if (task.status === TaskStatus.IN_PROGRESS) newStatus = TaskStatus.TODO;
+      }
+
+      const updatedTasks = [...prevTasks];
+      updatedTasks[taskIndex] = { ...task, status: newStatus };
+      return updatedTasks;
+    });
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
+  };
+
+  const handleAddTask = (status: TaskStatus) => {
+    const taskTitle = prompt('Enter task title:');
+    if (taskTitle) {
+      const newTask: Task = {
+        id: Date.now().toString(),
+        title: taskTitle,
+        status
+      };
+      setTasks(prevTasks => [...prevTasks, newTask]);
+    }
+  };
+
+  const filteredTasks = tasks.filter(task =>
+    task.title.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const todoTasks = filteredTasks.filter(t => t.status === TaskStatus.TODO);
+  const inProgressTasks = filteredTasks.filter(t => t.status === TaskStatus.IN_PROGRESS);
+  const doneTasks = filteredTasks.filter(t => t.status === TaskStatus.DONE);
+
   return (
-    <div className="min-h-screen bg-base-200 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Board Title</h1>
-          <p className="text-base-content/70">Board description</p>
-        </div>
+    <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-hidden">
+      <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-hidden">
+        <BoardHeader
+          boardName={boardName}
+          onBack={handleBack}
+          onInvite={handleInvite}
+          onFilterChange={setFilter}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* TODO Column */}
-          <div className="bg-base-100 rounded-lg p-4">
-            <h2 className="text-xl font-bold mb-4">To Do</h2>
-            <div className="space-y-3">
-              <div className="card bg-base-200">
-                <div className="card-body p-4">
-                  <h3 className="font-semibold">Task title</h3>
-                  <p className="text-sm text-base-content/70">Task description</p>
-                </div>
-              </div>
-            </div>
-            <button className="btn btn-sm btn-ghost w-full mt-4">+ Add Task</button>
-          </div>
-
-          {/* IN_PROGRESS Column */}
-          <div className="bg-base-100 rounded-lg p-4">
-            <h2 className="text-xl font-bold mb-4">In Progress</h2>
-            <div className="space-y-3">
-              {/* Tasks will be mapped here */}
-            </div>
-            <button className="btn btn-sm btn-ghost w-full mt-4">+ Add Task</button>
-          </div>
-
-          {/* DONE Column */}
-          <div className="bg-base-100 rounded-lg p-4">
-            <h2 className="text-xl font-bold mb-4">Done</h2>
-            <div className="space-y-3">
-              {/* Tasks will be mapped here */}
-            </div>
-            <button className="btn btn-sm btn-ghost w-full mt-4">+ Add Task</button>
-          </div>
+        <div className="flex-1 flex gap-4 sm:gap-6 overflow-x-auto pb-4">
+          <Column
+            title="To Do"
+            tasks={todoTasks}
+            status={TaskStatus.TODO}
+            onAddTask={() => handleAddTask(TaskStatus.TODO)}
+            onMoveTask={handleMoveTask}
+            onDeleteTask={handleDeleteTask}
+          />
+          <Column
+            title="Doing"
+            tasks={inProgressTasks}
+            status={TaskStatus.IN_PROGRESS}
+            onAddTask={() => handleAddTask(TaskStatus.IN_PROGRESS)}
+            onMoveTask={handleMoveTask}
+            onDeleteTask={handleDeleteTask}
+          />
+          <Column
+            title="Done"
+            tasks={doneTasks}
+            status={TaskStatus.DONE}
+            onAddTask={() => handleAddTask(TaskStatus.DONE)}
+            onMoveTask={handleMoveTask}
+            onDeleteTask={handleDeleteTask}
+          />
         </div>
       </div>
     </div>
