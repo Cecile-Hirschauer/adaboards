@@ -1,12 +1,8 @@
 import "./index.css";
-import { StyleTest } from "./components/StyleTest";
+import Landing from "./pages/Landing";
 
 function App() {
-  return (
-    <div className="container-page">
-      <StyleTest />
-    </div>
-  );
+  return <Landing />;
 }
 
 export default App;
