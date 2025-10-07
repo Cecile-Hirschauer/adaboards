@@ -5,7 +5,6 @@ import { TaskStatus } from '@/types';
 import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
 import { useTasks } from '@/hooks/useTasks';
-import { LogoutButton } from '@/components/shared/LogoutButton';
 
 
 
@@ -100,15 +99,12 @@ export default function BoardView() {
   return (
     <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-hidden">
       <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-hidden">
-        <div className="flex justify-between items-center mb-4">
-          <BoardHeader
-            boardName={boardName}
-            onBack={handleBack}
-            onInvite={handleInvite}
-            onFilterChange={setFilter}
-          />
-          <LogoutButton />
-        </div>
+        <BoardHeader
+          boardName={boardName}
+          onBack={handleBack}
+          onInvite={handleInvite}
+          onFilterChange={setFilter}
+        />
 
         <div className="flex-1 flex gap-4 sm:gap-6 overflow-x-auto pb-4">
           <Column
