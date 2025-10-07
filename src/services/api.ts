@@ -3,8 +3,18 @@ import { API_BASE_URL, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import type { User, Board, Task } from '../types';
 import { TaskStatus } from '../types';
 
-// Mode mock pour le développement local
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || true; // Activé par défaut pour le dev local
+/**
+ * Mode mock : Détermine si on utilise des données mockées ou l'API réelle
+ *
+ * Priorité :
+ * 1. Variable d'environnement VITE_USE_MOCK (true/false)
+ * 2. Sinon : true par défaut pour le développement local
+ *
+ * Pour utiliser l'API réelle :
+ * - Créer un fichier .env avec VITE_USE_MOCK=false
+ * - Ou modifier cette ligne directement
+ */
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || true;
 
 class ApiService {
   private getAuthToken(): string | null {

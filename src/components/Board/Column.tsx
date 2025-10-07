@@ -21,15 +21,15 @@ interface ColumnProps {
 
 export default function Column({ title, tasks, status, onAddTask, onMoveTask, onDeleteTask, onTaskTitleChange }: ColumnProps) {
   const borderColors = {
-    [TaskStatus.TODO]: 'border-[var(--clr-todo)]',
-    [TaskStatus.IN_PROGRESS]: 'border-[var(--clr-doing)]',
-    [TaskStatus.DONE]: 'border-[var(--clr-success)]',
+    [TaskStatus.TODO]: 'border-todo',
+    [TaskStatus.IN_PROGRESS]: 'border-doing',
+    [TaskStatus.DONE]: 'border-done',
   };
 
   const headerColors = {
-    [TaskStatus.TODO]: 'text-[var(--clr-todo)]',
-    [TaskStatus.IN_PROGRESS]: 'text-[var(--clr-doing)]',
-    [TaskStatus.DONE]: 'text-[var(--clr-success)]',
+    [TaskStatus.TODO]: 'text-todo',
+    [TaskStatus.IN_PROGRESS]: 'text-doing',
+    [TaskStatus.DONE]: 'text-done',
   };
 
   return (

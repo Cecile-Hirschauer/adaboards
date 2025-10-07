@@ -46,9 +46,9 @@ export default function BoardCard({ board, onOpen, onDelete }: BoardCardProps) {
 
       <div className="mt-4 flex items-center gap-2 text-xs text-[rgb(var(--muted-foreground))]">
         <div className="flex gap-1">
-          <div className="w-2 h-2 rounded-full bg-[var(--clr-todo)]" aria-hidden="true"></div>
-          <div className="w-2 h-2 rounded-full bg-[var(--clr-doing)]" aria-hidden="true"></div>
-          <div className="w-2 h-2 rounded-full bg-[var(--clr-success)]" aria-hidden="true"></div>
+          <div className="w-2 h-2 rounded-full bg-todo" aria-hidden="true"></div>
+          <div className="w-2 h-2 rounded-full bg-doing" aria-hidden="true"></div>
+          <div className="w-2 h-2 rounded-full bg-done" aria-hidden="true"></div>
         </div>
         <span>Tasks board</span>
       </div>
