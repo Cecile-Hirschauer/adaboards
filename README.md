@@ -81,19 +81,15 @@ npm run preview  # Preview production build
    - `/signup` - Signup page
    - `/boards` - Boards list
    - `/boards/:id` - Board detail view
+ 
 
-4. **API Integration**
-   - API service class with token authentication
-   - Custom `useBoards` hook for state management
-   - Error handling and loading states
-
-5. **Code Quality**
+4. **Code Quality**
    - TypeScript configuration with path aliases (`@/*`)
    - Fixed deprecation warnings in tsconfig
    - Responsive and accessible design (min-width: 320px)
    - CSS variables for theming
 
-6. **Performance Optimizations**
+5. **Performance Optimizations**
    - Code splitting: Pages loaded on-demand
    - Bundle optimization: Vendor chunks separated (React, React Query)
    - React Query: Efficient caching and data synchronization

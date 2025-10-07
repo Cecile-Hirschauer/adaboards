@@ -1,9 +1,10 @@
 // Board view page - Kanban board with tasks
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TaskStatus } from '@/types';
 import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
+import { useTasks } from '@/hooks/useTasks';
 
 interface Task {
   id: string;
@@ -14,40 +15,11 @@ interface Task {
 
 export default function BoardView() {
   const navigate = useNavigate();
+  const { id: boardId = 'default-board-id' } = useParams<{ id: string }>();
   const [boardName] = useState('Dataviz');
   const [filter, setFilter] = useState('');
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: '1',
-      title: "Appliquer l'asynchrone",
-      status: TaskStatus.TODO
-    },
-    {
-      id: '2',
-      title: "Se familiariser avec une bibliothèque d'animation graphique JavaScript",
-      status: TaskStatus.TODO
-    },
-    {
-      id: '3',
-      title: "Se poser la question de la durée de vie de son applicatif",
-      status: TaskStatus.IN_PROGRESS
-    },
-    {
-      id: '4',
-      title: "Manipuler du CSS et du HTML",
-      status: TaskStatus.DONE
-    },
-    {
-      id: '5',
-      title: "Mettre en place un environnement Web permettant de travailler en groupe sur le même projet",
-      status: TaskStatus.DONE
-    },
-    {
-      id: '6',
-      title: "Créer un repo commun et utiliser les commandes de base git",
-      status: TaskStatus.DONE
-    }
-  ]);
+
+  const { tasks, createTask, updateTask, deleteTask, isCreating } = useTasks(boardId);
 
   const handleBack = () => {
     navigate('/boards');
@@ -57,42 +29,34 @@ export default function BoardView() {
     console.log('Open invite modal');
   };
 
-  const handleMoveTask = (taskId: string, direction: 'left' | 'right') => {
-    setTasks(prevTasks => {
-      const taskIndex = prevTasks.findIndex(t => t.id === taskId);
-      if (taskIndex === -1) return prevTasks;
+  const handleMoveTask = async (taskId: string, direction: 'left' | 'right') => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
 
-      const task = prevTasks[taskIndex];
-      let newStatus = task.status;
+    let newStatus = task.status;
 
-      if (direction === 'right') {
-        if (task.status === TaskStatus.TODO) newStatus = TaskStatus.IN_PROGRESS;
-        else if (task.status === TaskStatus.IN_PROGRESS) newStatus = TaskStatus.DONE;
-      } else {
-        if (task.status === TaskStatus.DONE) newStatus = TaskStatus.IN_PROGRESS;
-        else if (task.status === TaskStatus.IN_PROGRESS) newStatus = TaskStatus.TODO;
-      }
-
-      const updatedTasks = [...prevTasks];
-      updatedTasks[taskIndex] = { ...task, status: newStatus };
-      return updatedTasks;
-    });
-  };
-
-  const handleDeleteTask = (taskId: string) => {
-    setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
-  };
-
-  const handleAddTask = (status: TaskStatus) => {
-    const taskTitle = prompt('Enter task title:');
-    if (taskTitle) {
-      const newTask: Task = {
-        id: Date.now().toString(),
-        title: taskTitle,
-        status
-      };
-      setTasks(prevTasks => [...prevTasks, newTask]);
+    if (direction === 'right') {
+      if (task.status === TaskStatus.TODO) newStatus = TaskStatus.IN_PROGRESS;
+      else if (task.status === TaskStatus.IN_PROGRESS) newStatus = TaskStatus.DONE;
+    } else {
+      if (task.status === TaskStatus.DONE) newStatus = TaskStatus.IN_PROGRESS;
+      else if (task.status === TaskStatus.IN_PROGRESS) newStatus = TaskStatus.TODO;
     }
+
+    if (newStatus !== task.status) {
+      await updateTask(taskId, { status: newStatus });
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId);
+  };
+
+  const handleAddTask = async (status: TaskStatus) => {
+    await createTask({
+      title: 'Something to do',
+      status,
+    });
   };
 
   const filteredTasks = tasks.filter(task =>
