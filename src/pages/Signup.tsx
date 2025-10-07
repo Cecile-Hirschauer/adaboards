@@ -1,5 +1,8 @@
 // Signup page
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 
 export default function Signup() {
   const [name, setName] = useState('');
@@ -13,59 +16,111 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title text-2xl mb-4">Sign Up</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Name</span>
+    <div className="min-h-screen bg-[rgb(var(--background))] flex flex-col">
+      {/* Header */}
+      <Header showSignInButton={false} />
+
+      {/* Main Content */}
+      <main className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
+          {/* Title */}
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-[rgb(var(--foreground))] text-3xl md:text-4xl font-bold mb-3">
+              Create an account
+            </h1>
+            <p className="text-[rgb(var(--muted-foreground))] text-base md:text-lg">
+              Start organizing your projects today
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Fullname */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
+              >
+                Fullname
               </label>
               <input
+                id="name"
                 type="text"
-                placeholder="Your name"
-                className="input input-bordered"
+                placeholder="Ada Lovelace"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors"
                 required
+                aria-required="true"
               />
             </div>
-            <div className="form-control mt-4">
-              <label className="label">
-                <span className="label-text">Email</span>
+
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
+              >
+                Email
               </label>
               <input
+                id="email"
                 type="email"
-                placeholder="email@example.com"
-                className="input input-bordered"
+                placeholder="ada@adatechschool.fr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors"
                 required
+                aria-required="true"
               />
             </div>
-            <div className="form-control mt-4">
-              <label className="label">
-                <span className="label-text">Password</span>
+
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
+              >
+                Password
               </label>
               <input
+                id="password"
                 type="password"
                 placeholder="Enter your password"
-                className="input input-bordered"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors"
                 required
+                aria-required="true"
               />
             </div>
-            <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary">Sign Up</button>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-8"
+            >
+              Create my account
+            </button>
+
+            {/* Sign in Link */}
+            <div className="text-center mt-6">
+              <p className="text-[rgb(var(--muted-foreground))]">
+                Already have an account?{' '}
+                <Link
+                  to="/login"
+                  className="text-[rgb(var(--foreground))] hover:text-[rgb(var(--primary))] font-medium transition-colors"
+                >
+                  Sign in
+                </Link>
+              </p>
             </div>
           </form>
-          <p className="text-center mt-4">
-            Already have an account? <a href="/login" className="link link-primary">Login</a>
-          </p>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
