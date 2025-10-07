@@ -4,9 +4,11 @@ import { Header } from '@/components/shared/Header';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useBoards } from '@/hooks/useBoards';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Boards() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { boards, loading, error, deleteBoard: deleteBoardApi, createBoard: createBoardApi, loadBoards } = useBoards();
 
   const getTimeAgo = (dateString: string) => {
@@ -48,8 +50,6 @@ export default function Boards() {
     navigate(`/boards/${id}`);
   };
 
-  const userName = 'Ada Lovelace';
-
   if (loading) {
     return (
       <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))]">
@@ -81,10 +81,15 @@ export default function Boards() {
         {/* Greeting Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 md:mb-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
-            <span className="text-[rgb(var(--foreground))]">Hello, </span>
-            <span className="text-[rgb(var(--primary))]" style={{ fontFamily: 'var(--font-handwriting)' }}>
-              {userName}
-            </span>
+            <span className="text-[rgb(var(--foreground))]">Hello</span>
+            {user?.name && (
+              <>
+                <span className="text-[rgb(var(--foreground))]">, </span>
+                <span className="text-[rgb(var(--primary))]" style={{ fontFamily: 'var(--font-handwriting)' }}>
+                  {user.name}
+                </span>
+              </>
+            )}
             <span className="text-[rgb(var(--foreground))]"> !</span>
           </h1>
           <Button
