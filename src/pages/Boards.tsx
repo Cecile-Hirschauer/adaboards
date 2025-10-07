@@ -4,6 +4,7 @@ import { Header } from '@/components/shared/Header';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useBoards } from '@/hooks/useBoards';
+import { LogoutButton } from '@/components/shared/LogoutButton';
 
 export default function Boards() {
   const navigate = useNavigate();
@@ -87,14 +88,17 @@ export default function Boards() {
             </span>
             <span className="text-[rgb(var(--foreground))]"> !</span>
           </h1>
-          <Button
-            onClick={handleAddBoard}
-            className="bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90 w-full sm:w-auto text-sm sm:text-base px-4 py-2"
-            aria-label="Add new board"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add board
-          </Button>
+          <div className="flex gap-3 w-full sm:w-auto">
+            <Button
+              onClick={handleAddBoard}
+              className="bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90 flex-1 sm:flex-initial text-sm sm:text-base px-4 py-2"
+              aria-label="Add new board"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add board
+            </Button>
+            <LogoutButton />
+          </div>
         </div>
 
         {/* Boards Grid */}
