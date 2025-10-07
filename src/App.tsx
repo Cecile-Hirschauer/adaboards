@@ -21,13 +21,18 @@ const queryClient = new QueryClient({
   },
 });
 
-// Loading fallback component
+// Loading fallback component - Optimized for performance
 function PageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[rgb(var(--background))]">
       <div className="text-center">
-        <div className="animate-pulse text-[rgb(var(--muted-foreground))]">
-          Loading...
+        {/* Spinner with CSS animation (no JS) */}
+        <div
+          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[rgb(var(--primary))] border-r-transparent"
+          role="status"
+          aria-label="Loading"
+        >
+          <span className="sr-only">Loading...</span>
         </div>
       </div>
     </div>
