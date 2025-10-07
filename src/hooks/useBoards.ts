@@ -25,7 +25,7 @@ export function useBoards() {
     }
   };
 
-  const createBoard = async (data: Omit<Board, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const createBoard = async (data: Omit<Board, 'id' | 'updated_at'>) => {
     try {
       const newBoard = await api.createBoard(data);
       setBoards([...boards, newBoard]);

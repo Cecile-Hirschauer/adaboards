@@ -9,11 +9,8 @@ export interface User {
 
 export interface Board {
   id: string;
-  title: string;
-  description?: string;
-  ownerId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name: string;
+  updated_at: string;
 }
 
 export interface Task {
