@@ -1,6 +1,11 @@
 import type { User } from '../types';
 import { LOCAL_STORAGE_KEYS } from './constants';
 
+interface TokenData {
+  token: string;
+  expiresAt: number;
+}
+
 /**
  * Helper pour gérer l'authentification dans localStorage
  *
@@ -10,16 +15,42 @@ import { LOCAL_STORAGE_KEYS } from './constants';
 export const authStorage = {
   /**
    * Récupère le token d'authentification
+   * Retourne null si le token a expiré
    */
   getToken: (): string | null => {
-    return localStorage.getItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
+    try {
+      const tokenDataStr = localStorage.getItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
+      if (!tokenDataStr) return null;
+
+      // Support de l'ancien format (string simple)
+      try {
+        const tokenData: TokenData = JSON.parse(tokenDataStr);
+        // Vérifier l'expiration
+        if (tokenData.expiresAt && Date.now() > tokenData.expiresAt) {
+          authStorage.clear();
+          return null;
+        }
+        return tokenData.token;
+      } catch {
+        // Ancien format: simple string
+        return tokenDataStr;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la lecture du token:', error);
+      return null;
+    }
   },
 
   /**
-   * Stocke le token d'authentification
+   * Stocke le token d'authentification avec une durée d'expiration
+   * Par défaut: 7 jours
    */
-  setToken: (token: string): void => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN, token);
+  setToken: (token: string, expiresInMs: number = 7 * 24 * 60 * 60 * 1000): void => {
+    const tokenData: TokenData = {
+      token,
+      expiresAt: Date.now() + expiresInMs,
+    };
+    localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN, JSON.stringify(tokenData));
   },
 
   /**

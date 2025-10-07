@@ -101,6 +101,20 @@ class ApiService {
     });
   }
 
+  async validateToken(token: string): Promise<{ valid: boolean }> {
+    if (USE_MOCK) {
+      // En mode mock, vérifier que le token existe et n'est pas expiré
+      // Pour simplifier, on considère qu'un token mock est valide s'il existe
+      // En production, cela ferait un vrai appel API
+      return Promise.resolve({ valid: !!token });
+    }
+
+    return this.request('/auth/validate', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
+
   // Boards
   async getBoards(): Promise<Board[]> {
     if (USE_MOCK) {

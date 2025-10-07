@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /**
    * Charger l'utilisateur depuis localStorage au montage
+   * getToken() vérifie automatiquement l'expiration et nettoie si nécessaire
    */
   useEffect(() => {
     const loadUser = () => {
@@ -47,9 +48,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const storedToken = authStorage.getToken();
         const storedUser = authStorage.getUser();
 
+        // getToken() retourne null si expiré
         if (storedToken && storedUser) {
           setToken(storedToken);
           setUser(storedUser);
+        } else if (!storedToken && storedUser) {
+          // Token expiré mais user encore là, nettoyer
+          authStorage.clear();
         }
       } catch (error) {
         console.error('Erreur lors du chargement de l\'utilisateur:', error);
