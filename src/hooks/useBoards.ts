@@ -1,69 +1,58 @@
-// Custom hook for managing boards
-import { useState, useEffect } from 'react';
+// Custom hook for managing boards with React Query
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import type { Board } from '../types';
 
+const BOARDS_QUERY_KEY = ['boards'];
+
 export function useBoards() {
-  const [boards, setBoards] = useState<Board[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    loadBoards();
-  }, []);
+  // Query for fetching boards
+  const {
+    data: boards = [],
+    isLoading: loading,
+    error,
+    refetch: loadBoards,
+  } = useQuery({
+    queryKey: BOARDS_QUERY_KEY,
+    queryFn: () => api.getBoards(),
+  });
 
-  const loadBoards = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await api.getBoards();
-      setBoards(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load boards');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Mutation for creating a board
+  const createBoardMutation = useMutation({
+    mutationFn: (data: Omit<Board, 'id' | 'updated_at'>) => api.createBoard(data),
+    onSuccess: () => {
+      // Invalidate and refetch boards after creation
+      queryClient.invalidateQueries({ queryKey: BOARDS_QUERY_KEY });
+    },
+  });
 
-  const createBoard = async (data: Omit<Board, 'id' | 'updated_at'>) => {
-    try {
-      const newBoard = await api.createBoard(data);
-      setBoards([...boards, newBoard]);
-      return newBoard;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create board');
-      throw err;
-    }
-  };
+  // Mutation for updating a board
+  const updateBoardMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Board> }) =>
+      api.updateBoard(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BOARDS_QUERY_KEY });
+    },
+  });
 
-  const updateBoard = async (id: string, data: Partial<Board>) => {
-    try {
-      const updatedBoard = await api.updateBoard(id, data);
-      setBoards(boards.map(b => b.id === id ? updatedBoard : b));
-      return updatedBoard;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update board');
-      throw err;
-    }
-  };
-
-  const deleteBoard = async (id: string) => {
-    try {
-      await api.deleteBoard(id);
-      setBoards(boards.filter(b => b.id !== id));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete board');
-      throw err;
-    }
-  };
+  // Mutation for deleting a board
+  const deleteBoardMutation = useMutation({
+    mutationFn: (id: string) => api.deleteBoard(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BOARDS_QUERY_KEY });
+    },
+  });
 
   return {
     boards,
     loading,
-    error,
+    error: error ? (error instanceof Error ? error.message : 'An error occurred') : null,
     loadBoards,
-    createBoard,
-    updateBoard,
-    deleteBoard,
+    createBoard: createBoardMutation.mutateAsync,
+    updateBoard: (id: string, data: Partial<Board>) =>
+      updateBoardMutation.mutateAsync({ id, data }),
+    deleteBoard: deleteBoardMutation.mutateAsync,
   };
 }

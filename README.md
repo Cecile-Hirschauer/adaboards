@@ -25,8 +25,7 @@ npm run preview  # Preview production build
 
 ## Project Structure
 
-```
-src/
+``` src/
 ├── components/       # Reusable components
 │   ├── shared/      # Header, Footer, Logo
 │   └── ui/          # UI components
