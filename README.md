@@ -61,6 +61,8 @@ A modern, offline-first React + TypeScript project management application with K
 - ✅ **Hot reload**: Vite HMR
 - ✅ **ESLint**: Code quality enforcement
 - ✅ **Documentation**: Detailed inline comments
+- ✅ **Testing**: Vitest for unit tests
+- ✅ **Utility functions**: Relative date formatting with full test coverage
 
 ## 🚀 Performance
 
@@ -91,6 +93,7 @@ A modern, offline-first React + TypeScript project management application with K
 - **Icons**: Lucide React
 - **Fonts**: Inter + Dancing Script
 - **Linting**: ESLint 9
+- **Testing**: Vitest
 
 ## 🛠️ Installation
 
@@ -109,6 +112,9 @@ npm run preview
 
 # Lint code
 npm run lint
+
+# Run tests
+npm test
 ```
 
 ## 📁 Project Structure
@@ -262,6 +268,29 @@ VITE_API_BASE_URL=https://your-api.com
 | `DELETE` | `/boards/{boardId}/tasks/{taskId}` | Delete task |
 
 ## 🧪 Testing
+
+### Test with Vitest
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Utility Tests
+
+**relativeDate.ts**: Converts timestamps to human-readable relative dates
+- ✅ "now" (< 1 minute)
+- ✅ "X minute(s) ago" (< 1 hour)
+- ✅ "X hour(s) ago" (< 1 day)
+- ✅ "X day(s) ago" (< 1 week)
+- ✅ "X week(s) ago" (< 1 month)
+- ✅ "X month(s) ago" (≥ 1 month)
 
 ### Test Authentication
 
