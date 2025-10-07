@@ -15,6 +15,10 @@ export default defineConfig({
     }
   },
   build: {
+    // Improve build performance
+    target: 'esnext',
+    minify: 'esbuild',
+    cssMinify: true,
     rollupOptions: {
       output: {
         // Manual chunk splitting for better caching
@@ -32,5 +36,13 @@ export default defineConfig({
     sourcemap: false,
     // Optimize chunk size
     chunkSizeWarningLimit: 1000,
+    // Reduce CSS bloat
+    cssCodeSplit: true,
+    // Improve asset optimization
+    assetsInlineLimit: 4096,
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],
   }
 })
