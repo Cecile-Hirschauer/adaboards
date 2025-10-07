@@ -54,7 +54,7 @@ class ApiService {
     return this.request(`/boards/${id}`);
   }
 
-  async createBoard(data: Omit<Board, 'id' | 'createdAt' | 'updatedAt'>): Promise<Board> {
+  async createBoard(data: Omit<Board, 'id' | 'updated_at'>): Promise<Board> {
     return this.request('/boards', {
       method: 'POST',
       body: JSON.stringify(data),
