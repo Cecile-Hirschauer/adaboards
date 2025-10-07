@@ -22,11 +22,11 @@ export default function BoardCard({ board, onOpen, onDelete }: BoardCardProps) {
       }}
       tabIndex={0}
       role="button"
-      aria-label={`Open board ${board.title}`}
+      aria-label={`Open board ${board.name}`}
     >
       <div className="flex justify-between items-start mb-3">
         <h3 className="text-xl font-bold text-[rgb(var(--foreground))] group-hover:text-[rgb(var(--primary))] transition-colors">
-          {board.title}
+          {board.name}
         </h3>
         {onDelete && (
           <Button
@@ -37,18 +37,12 @@ export default function BoardCard({ board, onOpen, onDelete }: BoardCardProps) {
               e.stopPropagation();
               onDelete(board.id);
             }}
-            aria-label={`Delete board ${board.title}`}
+            aria-label={`Delete board ${board.name}`}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
         )}
       </div>
-
-      {board.description && (
-        <p className="text-[rgb(var(--muted-foreground))] text-sm leading-relaxed line-clamp-2">
-          {board.description}
-        </p>
-      )}
 
       <div className="mt-4 flex items-center gap-2 text-xs text-[rgb(var(--muted-foreground))]">
         <div className="flex gap-1">
