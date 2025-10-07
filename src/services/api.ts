@@ -46,16 +46,58 @@ class ApiService {
 
   // Auth
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
+    if (USE_MOCK) {
+      // Simuler un délai réseau
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Mock user data
+      return Promise.resolve({
+        user: {
+          id: '1',
+          email,
+          name: 'John Doe',
+          createdAt: new Date(),
+        },
+        token: 'mock-jwt-token-' + Date.now(),
+      });
+    }
+
     return this.request('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
   }
 
-  async signup(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
-    return this.request('/auth/signup', {
+  async register(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
+    if (USE_MOCK) {
+      // Simuler un délai réseau
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Mock user data
+      return Promise.resolve({
+        user: {
+          id: Date.now().toString(),
+          email,
+          name,
+          createdAt: new Date(),
+        },
+        token: 'mock-jwt-token-' + Date.now(),
+      });
+    }
+
+    return this.request('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
+    });
+  }
+
+  async logout(): Promise<void> {
+    if (USE_MOCK) {
+      return Promise.resolve();
+    }
+
+    return this.request('/auth/logout', {
+      method: 'POST',
     });
   }
 
