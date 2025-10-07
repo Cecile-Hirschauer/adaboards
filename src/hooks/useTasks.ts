@@ -44,6 +44,20 @@ export function useTasks(boardId: string) {
     },
   });
 
+  // Mutation for patching a task (partial update)
+  const patchTaskMutation = useMutation({
+    mutationFn: ({ taskId, data }: { taskId: string; data: Partial<Task> }) =>
+      api.patchTask(boardId, taskId, data),
+    onSuccess: (_, { taskId, data }) => {
+      // Mise à jour optimiste du cache
+      queryClient.setQueryData<Task[]>(getTasksQueryKey(boardId), (old = []) =>
+        old.map((task) =>
+          task.id === taskId ? { ...task, ...data, updatedAt: new Date() } : task
+        )
+      );
+    },
+  });
+
   // Mutation for deleting a task
   const deleteTaskMutation = useMutation({
     mutationFn: (taskId: string) => api.deleteTask(taskId),
@@ -63,6 +77,8 @@ export function useTasks(boardId: string) {
     createTask: createTaskMutation.mutateAsync,
     updateTask: (taskId: string, data: Partial<Task>) =>
       updateTaskMutation.mutateAsync({ taskId, data }),
+    patchTask: (taskId: string, data: Partial<Task>) =>
+      patchTaskMutation.mutateAsync({ taskId, data }),
     deleteTask: deleteTaskMutation.mutateAsync,
     isCreating: createTaskMutation.isPending,
   };
