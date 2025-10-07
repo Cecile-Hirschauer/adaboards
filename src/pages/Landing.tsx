@@ -6,7 +6,7 @@ const Landing = () => {
   const navigate = useNavigate();
 
   const handleSignIn = () => {
-    navigate("/boards");
+    navigate("/login");
   };
 
   const handleGetStarted = () => {
