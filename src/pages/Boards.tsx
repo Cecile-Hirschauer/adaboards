@@ -1,35 +1,16 @@
 // Boards page - displays user's boards
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/shared/Header';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
-
-interface Board {
-  id: string;
-  name: string;
-  updatedAt: Date;
-  members: string[];
-}
+import { useBoards } from '@/hooks/useBoards';
 
 export default function Boards() {
   const navigate = useNavigate();
-  const [boards, setBoards] = useState<Board[]>([
-    {
-      id: '1',
-      name: 'Dataviz',
-      updatedAt: new Date('2025-01-06T10:56:00Z'),
-      members: ['Ada Lovelace', 'Dorothy Vaughan']
-    },
-    {
-      id: '2',
-      name: 'Plateforme de meubles',
-      updatedAt: new Date('2025-01-04T10:00:00Z'),
-      members: ['Ada Lovelace']
-    }
-  ]);
+  const { boards, loading, error, deleteBoard: deleteBoardApi, createBoard: createBoardApi, loadBoards } = useBoards();
 
-  const getTimeAgo = (date: Date) => {
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
 
@@ -44,20 +25,22 @@ export default function Boards() {
     }
   };
 
-  const handleDeleteBoard = (id: string) => {
-    setBoards(boards.filter(board => board.id !== id));
+  const handleDeleteBoard = async (id: string) => {
+    try {
+      await deleteBoardApi(id);
+    } catch (err) {
+      console.error('Failed to delete board:', err);
+    }
   };
 
-  const handleAddBoard = () => {
+  const handleAddBoard = async () => {
     const boardName = prompt('Enter board name:');
     if (boardName) {
-      const newBoard: Board = {
-        id: Date.now().toString(),
-        name: boardName,
-        updatedAt: new Date(),
-        members: ['Ada Lovelace']
-      };
-      setBoards([...boards, newBoard]);
+      try {
+        await createBoardApi({ name: boardName });
+      } catch (err) {
+        console.error('Failed to create board:', err);
+      }
     }
   };
 
@@ -66,6 +49,29 @@ export default function Boards() {
   };
 
   const userName = 'Ada Lovelace';
+
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))]">
+        <Header showSignInButton={false} />
+        <main className="flex-1 flex items-center justify-center">
+          <p className="text-[rgb(var(--muted-foreground))]">Loading boards...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))]">
+        <Header showSignInButton={false} />
+        <main className="flex-1 flex items-center justify-center flex-col gap-4">
+          <p className="text-[rgb(var(--destructive))]">Error: {error}</p>
+          <Button onClick={() => loadBoards()}>Retry</Button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-auto">
@@ -126,21 +132,9 @@ export default function Boards() {
               </div>
 
               {/* Last Edited */}
-              <p className="text-sm text-[rgb(var(--muted-foreground))] mb-4">
-                {getTimeAgo(board.updatedAt)}
+              <p className="text-sm text-[rgb(var(--muted-foreground))]">
+                {getTimeAgo(board.updated_at)}
               </p>
-
-              {/* Members */}
-              <div className="flex flex-wrap gap-2">
-                {board.members.map((member, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] rounded-full text-sm font-medium"
-                  >
-                    {member}
-                  </span>
-                ))}
-              </div>
             </article>
           ))}
         </div>
