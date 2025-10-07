@@ -2,6 +2,7 @@
 import { API_BASE_URL, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import type { User, Board, Task } from '../types';
 import { TaskStatus } from '../types';
+import { mockAuth } from '../utils/mockAuth';
 
 /**
  * Mode mock : Détermine si on utilise des données mockées ou l'API réelle
@@ -50,14 +51,15 @@ class ApiService {
       // Simuler un délai réseau
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Mock user data
+      // Vérifier que l'utilisateur existe et que le mot de passe est correct
+      const user = mockAuth.authenticate(email, password);
+
+      if (!user) {
+        throw new Error('Email ou mot de passe incorrect');
+      }
+
       return Promise.resolve({
-        user: {
-          id: '1',
-          email,
-          name: 'John Doe',
-          createdAt: new Date(),
-        },
+        user,
         token: 'mock-jwt-token-' + Date.now(),
       });
     }
@@ -73,14 +75,24 @@ class ApiService {
       // Simuler un délai réseau
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Mock user data
+      // Vérifier que l'email n'est pas déjà utilisé
+      if (mockAuth.userExists(email)) {
+        throw new Error('Cet email est déjà utilisé');
+      }
+
+      // Créer le nouvel utilisateur
+      const user: User = {
+        id: Date.now().toString(),
+        email,
+        name,
+        createdAt: new Date(),
+      };
+
+      // Sauvegarder l'utilisateur dans le mock storage
+      mockAuth.saveUser(email, password, user);
+
       return Promise.resolve({
-        user: {
-          id: Date.now().toString(),
-          email,
-          name,
-          createdAt: new Date(),
-        },
+        user,
         token: 'mock-jwt-token-' + Date.now(),
       });
     }
