@@ -1,6 +1,7 @@
 // API service for backend communication
 import { API_BASE_URL, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import type { User, Board, Task } from '../types';
+import { TaskStatus } from '../types';
 
 // Mode mock pour le développement local
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || true; // Activé par défaut pour le dev local
@@ -109,7 +110,7 @@ class ApiService {
         {
           id: '1',
           title: "Appliquer l'asynchrone",
-          status: 'TODO' as const,
+          status: TaskStatus.TODO,
           boardId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -117,7 +118,7 @@ class ApiService {
         {
           id: '2',
           title: "Se familiariser avec une bibliothèque d'animation graphique JavaScript",
-          status: 'TODO' as const,
+          status: TaskStatus.TODO,
           boardId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -125,7 +126,7 @@ class ApiService {
         {
           id: '3',
           title: "Se poser la question de la durée de vie de son applicatif",
-          status: 'IN_PROGRESS' as const,
+          status: TaskStatus.IN_PROGRESS,
           boardId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -133,7 +134,7 @@ class ApiService {
         {
           id: '4',
           title: "Manipuler du CSS et du HTML",
-          status: 'DONE' as const,
+          status: TaskStatus.DONE,
           boardId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -141,7 +142,7 @@ class ApiService {
         {
           id: '5',
           title: "Mettre en place un environnement Web permettant de travailler en groupe sur le même projet",
-          status: 'DONE' as const,
+          status: TaskStatus.DONE,
           boardId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -149,7 +150,7 @@ class ApiService {
         {
           id: '6',
           title: "Créer un repo commun et utiliser les commandes de base git",
-          status: 'DONE' as const,
+          status: TaskStatus.DONE,
           boardId,
           createdAt: new Date(),
           updatedAt: new Date(),
