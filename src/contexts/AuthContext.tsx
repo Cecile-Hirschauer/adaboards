@@ -8,7 +8,7 @@ import type { User } from '@/types';
 /**
  * Type du contexte d'authentification
  */
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
@@ -44,18 +44,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadUser = () => {
       try {
-        const storedToken = localStorage.getItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
-        const storedUser = localStorage.getItem(LOCAL_STORAGE_KEYS.USER);
+        const storedToken = authStorage.getToken();
+        const storedUser = authStorage.getUser();
 
         if (storedToken && storedUser) {
           setToken(storedToken);
-          setUser(JSON.parse(storedUser));
+          setUser(storedUser);
         }
       } catch (error) {
         console.error('Erreur lors du chargement de l\'utilisateur:', error);
         // En cas d'erreur, nettoyer le localStorage
-        localStorage.removeItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
-        localStorage.removeItem(LOCAL_STORAGE_KEYS.USER);
+        authStorage.clear();
       } finally {
         setIsLoading(false);
       }
@@ -76,8 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(response.token);
 
       // Sauvegarder dans localStorage
-      localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN, response.token);
-      localStorage.setItem(LOCAL_STORAGE_KEYS.USER, JSON.stringify(response.user));
+      authStorage.setToken(response.token);
+      authStorage.setUser(response.user);
     } catch (error) {
       console.error('Erreur de connexion:', error);
       throw error;
@@ -96,8 +95,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(response.token);
 
       // Sauvegarder dans localStorage
-      localStorage.setItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN, response.token);
-      localStorage.setItem(LOCAL_STORAGE_KEYS.USER, JSON.stringify(response.user));
+      authStorage.setToken(response.token);
+      authStorage.setUser(response.user);
     } catch (error) {
       console.error('Erreur d\'inscription:', error);
       throw error;
@@ -117,8 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Toujours nettoyer le state et localStorage
       setUser(null);
       setToken(null);
-      localStorage.removeItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
-      localStorage.removeItem(LOCAL_STORAGE_KEYS.USER);
+      authStorage.clear();
 
       // Rediriger vers la page de connexion
       navigate('/login');
