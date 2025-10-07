@@ -104,8 +104,57 @@ class ApiService {
   // Tasks
   async getTasks(boardId: string): Promise<Task[]> {
     if (USE_MOCK) {
-      // Retourner un tableau vide en mode mock
-      return Promise.resolve([]);
+      // Retourner des tâches mockées pour le développement
+      return Promise.resolve([
+        {
+          id: '1',
+          title: "Appliquer l'asynchrone",
+          status: 'TODO' as const,
+          boardId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '2',
+          title: "Se familiariser avec une bibliothèque d'animation graphique JavaScript",
+          status: 'TODO' as const,
+          boardId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '3',
+          title: "Se poser la question de la durée de vie de son applicatif",
+          status: 'IN_PROGRESS' as const,
+          boardId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '4',
+          title: "Manipuler du CSS et du HTML",
+          status: 'DONE' as const,
+          boardId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '5',
+          title: "Mettre en place un environnement Web permettant de travailler en groupe sur le même projet",
+          status: 'DONE' as const,
+          boardId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '6',
+          title: "Créer un repo commun et utiliser les commandes de base git",
+          status: 'DONE' as const,
+          boardId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
     }
     return this.request(`/boards/${boardId}/tasks`);
   }
