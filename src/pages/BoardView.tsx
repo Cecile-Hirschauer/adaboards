@@ -14,7 +14,7 @@ export default function BoardView() {
   const [boardName] = useState('Dataviz');
   const [filter, setFilter] = useState('');
 
-  const { tasks, createTask, updateTask, deleteTask, loading, error } = useTasks(boardId);
+  const { tasks, createTask, updateTask, patchTask, deleteTask, loading, error } = useTasks(boardId);
 
   const handleBack = () => {
     navigate('/boards');
@@ -52,6 +52,10 @@ export default function BoardView() {
       title: 'Something to do',
       status,
     });
+  };
+
+  const handleTaskTitleChange = async (taskId: string, newTitle: string) => {
+    await patchTask(taskId, { title: newTitle });
   };
 
   // Loading state
@@ -110,6 +114,7 @@ export default function BoardView() {
             onAddTask={() => handleAddTask(TaskStatus.TODO)}
             onMoveTask={handleMoveTask}
             onDeleteTask={handleDeleteTask}
+            onTaskTitleChange={handleTaskTitleChange}
           />
           <Column
             title="Doing"
@@ -118,6 +123,7 @@ export default function BoardView() {
             onAddTask={() => handleAddTask(TaskStatus.IN_PROGRESS)}
             onMoveTask={handleMoveTask}
             onDeleteTask={handleDeleteTask}
+            onTaskTitleChange={handleTaskTitleChange}
           />
           <Column
             title="Done"
@@ -126,6 +132,7 @@ export default function BoardView() {
             onAddTask={() => handleAddTask(TaskStatus.DONE)}
             onMoveTask={handleMoveTask}
             onDeleteTask={handleDeleteTask}
+            onTaskTitleChange={handleTaskTitleChange}
           />
         </div>
       </div>

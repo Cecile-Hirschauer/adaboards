@@ -188,6 +188,17 @@ class ApiService {
     });
   }
 
+  async patchTask(boardId: string, taskId: string, data: Partial<Task>): Promise<Task> {
+    if (USE_MOCK) {
+      // Simuler la mise à jour partielle d'une tâche
+      return Promise.resolve({ id: taskId, ...data } as Task);
+    }
+    return this.request(`/boards/${boardId}/tasks/${taskId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
   async deleteTask(taskId: string): Promise<void> {
     if (USE_MOCK) {
       // Simuler la suppression

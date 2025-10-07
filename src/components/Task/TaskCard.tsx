@@ -1,6 +1,7 @@
 // Task card component for Kanban board
 import { Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { TaskStatus } from '@/types';
+import { useState } from 'react';
 
 interface TaskCardProps {
   task: {
@@ -12,9 +13,12 @@ interface TaskCardProps {
   onMoveLeft?: () => void;
   onMoveRight?: () => void;
   onDelete?: () => void;
+  onTitleChange?: (newTitle: string) => void;
 }
 
-export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDelete }: TaskCardProps) {
+export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDelete, onTitleChange }: TaskCardProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(task.title);
   const statusColors = {
     [TaskStatus.TODO]: 'bg-[var(--clr-todo)] border-[var(--clr-todo)]',
     [TaskStatus.IN_PROGRESS]: 'bg-[var(--clr-doing)] border-[var(--clr-doing)]',
@@ -24,14 +28,46 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
   const canMoveLeft = status !== TaskStatus.TODO;
   const canMoveRight = status !== TaskStatus.DONE;
 
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setEditedTitle(newTitle);
+
+    // Appeler automatiquement la fonction de mise à jour
+    if (onTitleChange && newTitle.trim()) {
+      onTitleChange(newTitle);
+    }
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    // Restaurer le titre original si vide
+    if (!editedTitle.trim()) {
+      setEditedTitle(task.title);
+    }
+  };
+
   return (
     <article
       className={`${statusColors[status]} rounded-lg p-4 mb-3 relative group transition-all hover:shadow-lg`}
       aria-label={`Task: ${task.title}`}
     >
-      <p className="text-[var(--color-gray-800)] text-sm mb-3 pr-6 font-medium">
-        {task.title}
-      </p>
+      {isEditing ? (
+        <input
+          type="text"
+          value={editedTitle}
+          onChange={handleTitleChange}
+          onBlur={handleBlur}
+          autoFocus
+          className="text-[var(--color-gray-800)] text-sm mb-3 pr-6 font-medium w-full bg-white/80 border border-[var(--color-gray-800)] rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[var(--color-gray-800)]"
+        />
+      ) : (
+        <p
+          className="text-[var(--color-gray-800)] text-sm mb-3 pr-6 font-medium cursor-text"
+          onClick={() => setIsEditing(true)}
+        >
+          {task.title}
+        </p>
+      )}
 
       {task.description && (
         <p className="text-[var(--color-gray-800)] text-xs mb-3 opacity-80">

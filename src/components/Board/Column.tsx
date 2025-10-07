@@ -16,9 +16,10 @@ interface ColumnProps {
   onAddTask?: () => void;
   onMoveTask?: (taskId: string, direction: 'left' | 'right') => void;
   onDeleteTask?: (taskId: string) => void;
+  onTaskTitleChange?: (taskId: string, newTitle: string) => void;
 }
 
-export default function Column({ title, tasks, status, onAddTask, onMoveTask, onDeleteTask }: ColumnProps) {
+export default function Column({ title, tasks, status, onAddTask, onMoveTask, onDeleteTask, onTaskTitleChange }: ColumnProps) {
   const borderColors = {
     [TaskStatus.TODO]: 'border-[var(--clr-todo)]',
     [TaskStatus.IN_PROGRESS]: 'border-[var(--clr-doing)]',
@@ -68,6 +69,7 @@ export default function Column({ title, tasks, status, onAddTask, onMoveTask, on
               onMoveLeft={onMoveTask ? () => onMoveTask(task.id, 'left') : undefined}
               onMoveRight={onMoveTask ? () => onMoveTask(task.id, 'right') : undefined}
               onDelete={onDeleteTask ? () => onDeleteTask(task.id) : undefined}
+              onTitleChange={onTaskTitleChange ? (newTitle) => onTaskTitleChange(task.id, newTitle) : undefined}
             />
           ))
         )}
