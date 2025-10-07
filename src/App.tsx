@@ -1,7 +1,8 @@
 import "./index.css";
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { queryClient, persister } from "./lib/queryClient";
 
 // Lazy load pages for better performance (code splitting)
 // Each page will be loaded only when needed, reducing initial bundle size
@@ -10,16 +11,6 @@ const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Boards = lazy(() => import("./pages/Boards"));
 const BoardView = lazy(() => import("./pages/BoardView"));
-
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      refetchOnWindowFocus: false,
-    },
-  },
-});
 
 // Loading fallback component - Optimized for performance
 function PageLoader() {
@@ -39,9 +30,25 @@ function PageLoader() {
   );
 }
 
+/**
+ * App Component avec persistance localStorage
+ *
+ * PersistQueryClientProvider :
+ * - Remplace QueryClientProvider classique
+ * - Ajoute la sauvegarde automatique dans localStorage
+ * - Restaure les données au chargement de la page
+ *
+ * Comportement :
+ * 1. Premier chargement : Fetch API → Sauvegarde dans localStorage
+ * 2. Rechargements suivants : Affiche données localStorage immédiatement → Re-fetch API en arrière-plan
+ * 3. Mode offline : Utilise uniquement localStorage (pas de fetch API)
+ */
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister }}
+    >
       <BrowserRouter>
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -54,7 +61,7 @@ function App() {
           </Routes>
         </Suspense>
       </BrowserRouter>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 

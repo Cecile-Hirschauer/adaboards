@@ -20,9 +20,9 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
   const statusColors = {
-    [TaskStatus.TODO]: 'bg-[var(--clr-todo)] border-[var(--clr-todo)]',
-    [TaskStatus.IN_PROGRESS]: 'bg-[var(--clr-doing)] border-[var(--clr-doing)]',
-    [TaskStatus.DONE]: 'bg-[var(--clr-success)] border-[var(--clr-success)]',
+    [TaskStatus.TODO]: 'bg-todo border-todo',
+    [TaskStatus.IN_PROGRESS]: 'bg-doing border-doing',
+    [TaskStatus.DONE]: 'bg-done border-done',
   };
 
   const canMoveLeft = status !== TaskStatus.TODO;
@@ -58,11 +58,11 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
           onChange={handleTitleChange}
           onBlur={handleBlur}
           autoFocus
-          className="text-[var(--color-gray-800)] text-sm mb-3 pr-6 font-medium w-full bg-white/80 border border-[var(--color-gray-800)] rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[var(--color-gray-800)]"
+          className="text-gray-800 text-sm mb-3 pr-6 font-medium w-full bg-white/80 border border-gray-800 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-800"
         />
       ) : (
         <p
-          className="text-[var(--color-gray-800)] text-sm mb-3 pr-6 font-medium cursor-text"
+          className="text-gray-800 text-sm mb-3 pr-6 font-medium cursor-text"
           onClick={() => setIsEditing(true)}
         >
           {task.title}
@@ -70,7 +70,7 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
       )}
 
       {task.description && (
-        <p className="text-[var(--color-gray-800)] text-xs mb-3 opacity-80">
+        <p className="text-gray-800 text-xs mb-3 opacity-80">
           {task.description}
         </p>
       )}
@@ -79,7 +79,7 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
         {canMoveLeft && onMoveLeft && (
           <button
             onClick={onMoveLeft}
-            className="w-7 h-7 bg-[var(--color-gray-800)] rounded flex items-center justify-center hover:bg-[var(--color-muted-background)] transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+            className="w-7 h-7 bg-gray-800 rounded flex items-center justify-center hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Move task left"
           >
             <ChevronLeft className="w-4 h-4 text-white" />
@@ -89,7 +89,7 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
         {canMoveRight && onMoveRight && (
           <button
             onClick={onMoveRight}
-            className="w-7 h-7 bg-[var(--color-gray-800)] rounded flex items-center justify-center hover:bg-[var(--color-muted-background)] transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+            className="w-7 h-7 bg-gray-800 rounded flex items-center justify-center hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Move task right"
           >
             <ChevronRight className="w-4 h-4 text-white" />
@@ -100,7 +100,7 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
       {onDelete && (
         <button
           onClick={onDelete}
-          className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-[var(--color-gray-800)] hover:text-[var(--clr-error)] transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white rounded"
+          className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-gray-800 hover:text-error transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white rounded"
           aria-label={`Delete task ${task.title}`}
         >
           <Trash2 className="w-4 h-4" />

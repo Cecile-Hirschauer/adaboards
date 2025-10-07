@@ -2,132 +2,73 @@
 @import "tailwindcss";
 
 @theme {
-  /* Couleurs grises (nomenclature --color-) */
-  --color-gray-800: #2b2d31;           /* Background principal */
-  --color-light: #ffffff;              /* Blanc */
-  --color-muted: #71717a;              /* Gris moyen */
-  --color-disabled: #52525b;           /* Gris désactivé */
-  --color-muted-background: #3d3f45;   /* Gris background secondaire */
+  /* Couleurs Kanban */
+  --color-todo: #fbbf24;
+  --color-doing: #22d3ee;
+  --color-done: #34d399;
+  --color-error: #f87171;
+  --color-primary: #c4b5fd;
+  --color-primary-dark: #a78bfa;
 
-  /* Couleurs sémantiques (nomenclature --clr-) */
-  --clr-error: #f87171;                /* Rouge/Rose erreur */
-  --clr-success: #34d399;              /* Vert succès */
-  --clr-primary: #c4b5fd;              /* Violet/Lavande principal */
-  --clr-todo: #fbbf24;                 /* Jaune pour Todo */
-  --clr-doing: #22d3ee;                /* Cyan pour Doing */
-
-  /* Variantes supplémentaires pour le développement */
-  --color-border: #4a4c52;             /* Bordures */
-  --color-input: #383a3f;              /* Background inputs */
-  --clr-primary-dark: #a78bfa;         /* Variante plus foncée du primary */
-  --clr-done: var(--clr-success);      /* Alias pour Done = Success */
+  /* Couleurs grises */
+  --color-gray-800: #2b2d31;
+  --color-gray-700: #3d3f45;
+  --color-gray-600: #4a4c52;
+  --color-gray-500: #71717a;
+  --color-gray-400: #9ca3af;
+  --color-white: #ffffff;
 
   /* Fonts */
   --font-sans: "Inter", system-ui, sans-serif;
   --font-handwriting: "Dancing Script", cursive;
-
-  /* Border radius */
-  --radius-sm: 0.375rem;   /* 6px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 0.75rem;    /* 12px */
-  --radius-xl: 1rem;       /* 16px */
-
-  /* Spacing */
-  --spacing-card: 1.5rem;
-  --spacing-section: 3rem;
-
-  /* Shadows */
-  --shadow-primary: 0 10px 25px -5px rgba(196, 181, 253, 0.1);
-
-  /* Transitions */
-  --transition-fast: 150ms;
-  --transition-base: 200ms;
-  --transition-slow: 300ms;
 }
 
 @layer base {
   :root {
-    /* Light mode - shadcn/ui variables (format RGB) */
-    --background: 255 255 255;           /* White background */
-    --foreground: 43 45 49;              /* Dark text */
-
-    --card: 255 255 255;                 /* White cards */
+    /* Variables shadcn/ui (format RGB) pour compatibilité avec composants shadcn */
+    --background: 255 255 255;
+    --foreground: 43 45 49;
+    --card: 255 255 255;
     --card-foreground: 43 45 49;
-
     --popover: 255 255 255;
     --popover-foreground: 43 45 49;
-
-    --primary: 196 181 253;              /* --clr-primary */
+    --primary: 196 181 253;
     --primary-foreground: 43 45 49;
-
-    --secondary: 240 240 245;            /* Light gray */
+    --secondary: 240 240 245;
     --secondary-foreground: 43 45 49;
-
     --muted: 240 240 245;
-    --muted-foreground: 113 113 122;     /* --color-muted */
-
+    --muted-foreground: 113 113 122;
     --accent: 240 240 245;
     --accent-foreground: 43 45 49;
-
-    --destructive: 248 113 113;          /* --clr-error */
+    --destructive: 248 113 113;
     --destructive-foreground: 255 255 255;
-
-    --border: 228 228 231;               /* Light border */
-    --input: 228 228 231;                /* Light input */
-    --ring: 196 181 253;                 /* --clr-primary */
-
+    --border: 228 228 231;
+    --input: 228 228 231;
+    --ring: 196 181 253;
     --radius: 0.5rem;
-
-    /* Light mode custom colors */
-    --color-gray-800: #f9fafb;           /* Light background */
-    --color-light: #111827;              /* Dark text for light mode */
-    --color-muted: #6b7280;
-    --color-disabled: #9ca3af;
-    --color-muted-background: #f3f4f6;
-    --color-border: #e5e7eb;
-    --color-input: #f9fafb;
   }
 
   .dark {
-    /* Dark mode - shadcn/ui variables (format RGB) */
-    --background: 43 45 49;              /* --color-gray-800 */
-    --foreground: 255 255 255;           /* --color-light */
-
-    --card: 61 63 69;                    /* --color-muted-background */
+    /* Dark mode - variables shadcn/ui */
+    --background: 43 45 49;
+    --foreground: 255 255 255;
+    --card: 61 63 69;
     --card-foreground: 255 255 255;
-
     --popover: 61 63 69;
     --popover-foreground: 255 255 255;
-
-    --primary: 196 181 253;              /* --clr-primary */
+    --primary: 196 181 253;
     --primary-foreground: 43 45 49;
-
-    --secondary: 167 139 250;            /* --clr-primary-dark */
+    --secondary: 167 139 250;
     --secondary-foreground: 255 255 255;
-
-    --muted: 82 82 91;                   /* --color-disabled */
-    --muted-foreground: 113 113 122;     /* --color-muted */
-
+    --muted: 82 82 91;
+    --muted-foreground: 113 113 122;
     --accent: 196 181 253;
     --accent-foreground: 43 45 49;
-
-    --destructive: 248 113 113;          /* --clr-error */
+    --destructive: 248 113 113;
     --destructive-foreground: 255 255 255;
-
-    --border: 74 76 82;                  /* --color-border */
-    --input: 56 58 63;                   /* --color-input */
-    --ring: 196 181 253;                 /* --clr-primary */
-
-    --radius: 0.5rem;
-
-    /* Dark mode custom colors */
-    --color-gray-800: #2b2d31;
-    --color-light: #ffffff;
-    --color-muted: #71717a;
-    --color-disabled: #52525b;
-    --color-muted-background: #3d3f45;
-    --color-border: #4a4c52;
-    --color-input: #383a3f;
+    --border: 74 76 82;
+    --input: 56 58 63;
+    --ring: 196 181 253;
   }
 
   * {
@@ -136,7 +77,7 @@
 
   body {
     background-color: var(--color-gray-800);
-    color: var(--color-light);
+    color: var(--color-white);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -147,314 +88,5 @@
 
   #root {
     min-height: 100vh;
-  }
-}
-
-@layer components {
-  /* Logo */
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-decoration: none;
-    color: var(--color-light);
-    transition: opacity var(--transition-base);
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-
-  .logo-icon {
-    width: 2rem;
-    height: 2rem;
-    background-color: var(--clr-primary);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-gray-800);
-    font-weight: 700;
-  }
-
-  /* Typography */
-  .page-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-family: var(--font-handwriting);
-    line-height: 1.2;
-  }
-
-  .section-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-
-  .greeting {
-    font-size: clamp(2.5rem, 4vw, 3.5rem);
-    margin-bottom: 2rem;
-  }
-
-  .greeting-name {
-    font-family: var(--font-handwriting);
-    color: var(--clr-primary);
-  }
-
-  /* Badges/Tags selon les couleurs Kanban */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.375rem 0.75rem;
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all var(--transition-base);
-  }
-
-  .badge-todo {
-    background-color: var(--clr-todo);
-    color: var(--color-gray-800);
-  }
-
-  .badge-doing {
-    background-color: var(--clr-doing);
-    color: var(--color-gray-800);
-  }
-
-  .badge-done {
-    background-color: var(--clr-success);
-    color: var(--color-gray-800);
-  }
-
-  .badge-error {
-    background-color: var(--clr-error);
-    color: var(--color-light);
-  }
-
-  /* Cards */
-  .board-card {
-    background-color: var(--color-muted-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-card);
-    transition: all var(--transition-base) ease-in-out;
-    cursor: pointer;
-
-    &:hover {
-      border-color: var(--clr-primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-primary);
-    }
-  }
-
-  .task-card {
-    background-color: var(--color-muted-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    margin-bottom: 0.75rem;
-    transition: all var(--transition-base) ease-in-out;
-
-    &:hover {
-      border-color: var(--clr-primary);
-    }
-  }
-
-  /* Task cards avec couleurs selon colonne */
-  .task-card-todo {
-    border-left: 3px solid var(--clr-todo);
-  }
-
-  .task-card-doing {
-    border-left: 3px solid var(--clr-doing);
-  }
-
-  .task-card-done {
-    border-left: 3px solid var(--clr-success);
-  }
-
-  /* Layout */
-  .container-page {
-    min-height: 100vh;
-    padding: 1.5rem;
-
-    @media (min-width: 768px) {
-      padding: 2rem;
-    }
-  }
-
-  .centered-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-  }
-
-  /* Auth layout */
-  .auth-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-  }
-
-  .auth-form {
-    width: 100%;
-    max-width: 28rem;
-  }
-
-  .auth-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .auth-subtitle {
-    text-align: center;
-    color: var(--color-muted);
-    margin-bottom: 2rem;
-    font-size: 1.125rem;
-  }
-
-  /* Kanban */
-  .kanban-board {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-
-    @media (min-width: 768px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .kanban-column {
-    background-color: var(--color-muted-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
-    padding: 1rem;
-    min-height: 500px;
-  }
-
-  .kanban-column-header {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  /* Headers des colonnes avec couleurs */
-  .kanban-column-todo .kanban-column-header {
-    color: var(--clr-todo);
-  }
-
-  .kanban-column-doing .kanban-column-header {
-    color: var(--clr-doing);
-  }
-
-  .kanban-column-done .kanban-column-header {
-    color: var(--clr-success);
-  }
-
-  /* Feature cards */
-  .feature-card {
-    background-color: var(--color-muted-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-card);
-    transition: all var(--transition-base) ease-in-out;
-
-    &:hover {
-      border-color: var(--clr-primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-primary);
-    }
-  }
-
-  .feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: var(--clr-primary);
-  }
-
-  .feature-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-  }
-
-  .feature-description {
-    color: var(--color-muted);
-    line-height: 1.6;
-  }
-
-  /* States */
-  .disabled {
-    color: var(--color-disabled);
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  .error-text {
-    color: var(--clr-error);
-  }
-
-  .success-text {
-    color: var(--clr-success);
-  }
-
-  /* Divider */
-  .divider {
-    height: 1px;
-    background-color: var(--color-border);
-    margin: 1rem 0;
-  }
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .text-muted {
-    color: var(--color-muted);
-  }
-
-  .text-disabled {
-    color: var(--color-disabled);
-  }
-
-  .text-primary {
-    color: var(--clr-primary);
-  }
-
-  .text-error {
-    color: var(--clr-error);
-  }
-
-  .text-success {
-    color: var(--clr-success);
-  }
-
-  .bg-todo {
-    background-color: var(--clr-todo);
-  }
-
-  .bg-doing {
-    background-color: var(--clr-doing);
-  }
-
-  .bg-done {
-    background-color: var(--clr-success);
   }
 }
