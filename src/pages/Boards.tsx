@@ -77,10 +77,10 @@ export default function Boards() {
     <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-auto">
       <Header showSignInButton={false} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6 md:py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full py-4 sm:py-6 md:py-8">
         {/* Greeting Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 md:mb-10">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
             <span className="text-[rgb(var(--foreground))]">Hello, </span>
             <span className="text-[rgb(var(--primary))]" style={{ fontFamily: 'var(--font-handwriting)' }}>
               {userName}
@@ -89,7 +89,7 @@ export default function Boards() {
           </h1>
           <Button
             onClick={handleAddBoard}
-            className="bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90 w-full sm:w-auto"
+            className="bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90 w-full sm:w-auto text-sm sm:text-base px-4 py-2"
             aria-label="Add new board"
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -98,11 +98,11 @@ export default function Boards() {
         </div>
 
         {/* Boards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {boards.map((board) => (
             <article
               key={board.id}
-              className="bg-[rgb(var(--card))] rounded-2xl p-6 border border-[rgb(var(--border))] hover:border-[rgb(var(--primary))] transition-all cursor-pointer group"
+              className="bg-[rgb(var(--card))] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-[rgb(var(--border))] hover:border-[rgb(var(--primary))] transition-all cursor-pointer group"
               onClick={() => handleOpenBoard(board.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -115,8 +115,8 @@ export default function Boards() {
               aria-label={`Open board ${board.name}`}
             >
               {/* Board Header */}
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-semibold text-[rgb(var(--foreground))]">
+              <div className="flex justify-between items-start mb-3 sm:mb-4">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-[rgb(var(--foreground))] break-words pr-2">
                   {board.name}
                 </h2>
                 <button
@@ -124,15 +124,15 @@ export default function Boards() {
                     e.stopPropagation();
                     handleDeleteBoard(board.id);
                   }}
-                  className="text-[rgb(var(--muted-foreground))] hover:text-[rgb(var(--destructive))] transition-colors opacity-0 group-hover:opacity-100 p-1"
+                  className="text-[rgb(var(--muted-foreground))] hover:text-[rgb(var(--destructive))] transition-colors opacity-0 group-hover:opacity-100 p-1 flex-shrink-0"
                   aria-label={`Delete board ${board.name}`}
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
 
               {/* Last Edited */}
-              <p className="text-sm text-[rgb(var(--muted-foreground))]">
+              <p className="text-xs sm:text-sm text-[rgb(var(--muted-foreground))]">
                 {getTimeAgo(board.updated_at)}
               </p>
             </article>
@@ -141,13 +141,13 @@ export default function Boards() {
 
         {/* Empty State */}
         {boards.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-[rgb(var(--muted-foreground))] text-xl mb-4">
+          <div className="text-center py-12 sm:py-16 md:py-20 px-4">
+            <p className="text-[rgb(var(--muted-foreground))] text-base sm:text-lg md:text-xl mb-3 sm:mb-4">
               No boards yet
             </p>
             <Button
               onClick={handleAddBoard}
-              className="bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90"
+              className="bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90 text-sm sm:text-base px-4 py-2"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create your first board

@@ -21,20 +21,20 @@ export default function Signup() {
       <Header showSignInButton={false} />
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center px-4 py-8">
+      <main className="flex-1 flex items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
         <div className="w-full max-w-md">
           {/* Title */}
-          <div className="text-center mb-8 md:mb-12">
-            <h1 className="text-[rgb(var(--foreground))] text-3xl md:text-4xl font-bold mb-3">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12">
+            <h1 className="text-[rgb(var(--foreground))] text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3">
               Create an account
             </h1>
-            <p className="text-[rgb(var(--muted-foreground))] text-base md:text-lg">
+            <p className="text-[rgb(var(--muted-foreground))] text-sm sm:text-base md:text-lg">
               Start organizing your projects today
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Fullname */}
             <div>
               <label
@@ -49,7 +49,7 @@ export default function Signup() {
                 placeholder="Ada Lovelace"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
                 required
                 aria-required="true"
               />
@@ -69,7 +69,7 @@ export default function Signup() {
                 placeholder="ada@adatechschool.fr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
                 required
                 aria-required="true"
               />
@@ -89,7 +89,7 @@ export default function Signup() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
                 required
                 aria-required="true"
               />
@@ -98,14 +98,14 @@ export default function Signup() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-8"
+              className="w-full py-2.5 sm:py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-6 sm:mt-8 text-sm sm:text-base"
             >
               Create my account
             </button>
 
             {/* Sign in Link */}
-            <div className="text-center mt-6">
-              <p className="text-[rgb(var(--muted-foreground))]">
+            <div className="text-center mt-4 sm:mt-6">
+              <p className="text-[rgb(var(--muted-foreground))] text-sm sm:text-base">
                 Already have an account?{' '}
                 <Link
                   to="/login"

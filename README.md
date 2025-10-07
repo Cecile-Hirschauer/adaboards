@@ -1,15 +1,92 @@
-# React + TypeScript + Vite
+# AdaBoards
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript project management application built with Vite, Tailwind CSS, and DaisyUI.
 
-Currently, two official plugins are available:
+## Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+AdaBoards is a task and project management tool that allows users to organize work into boards with a Kanban-style interface.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19 + TypeScript 5.9
+- **Build Tool**: Vite 7
+- **Styling**: Tailwind CSS 4.x + DaisyUI 5.x
+- **Routing**: React Router v6
+- **Linting**: ESLint 9
+
+## Development Commands
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run lint     # Run ESLint
+npm run preview  # Preview production build
+```
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable components
+│   ├── shared/      # Header, Footer, Logo
+│   └── ui/          # UI components
+├── pages/           # Application pages
+│   ├── Landing.tsx  # Landing page
+│   ├── Login.tsx    # Login page
+│   ├── Signup.tsx   # Signup page
+│   ├── Boards.tsx   # Boards list (home)
+│   └── BoardView.tsx # Board detail view
+├── services/        # API services
+│   └── api.ts       # API service class
+├── types/           # TypeScript types
+│   └── index.ts     # Board, Task types
+├── hooks/           # Custom React hooks
+│   └── useBoards.ts # Board management hook
+└── utils/           # Utilities
+    └── constants.ts # App constants
+```
+
+## Day-1 Progress
+
+### ✅ Completed Features
+
+1. **Boards List Page (Home)**
+   - Display boards fetched from API via `GET /boards`
+   - Show board name and last update time
+   - Click on board to navigate to detail view
+   - Add new board via `POST /boards`
+   - Delete board via `DELETE /boards/:id`
+
+2. **Authentication Pages**
+   - Login page with responsive design
+   - Signup page with responsive design
+   - Header and Footer components
+   - Navigation between Login and Signup
+
+3. **Routing**
+   - `/` - Landing page
+   - `/login` - Login page
+   - `/signup` - Signup page
+   - `/boards` - Boards list
+   - `/boards/:id` - Board detail view
+
+4. **API Integration**
+   - API service class with token authentication
+   - Custom `useBoards` hook for state management
+   - Error handling and loading states
+
+5. **Code Quality**
+   - TypeScript configuration with path aliases (`@/*`)
+   - Fixed deprecation warnings in tsconfig
+   - Responsive and accessible design
+   - CSS variables for theming
+
+### 🎯 Next Steps
+
+- Implement login/signup logic with API
+- Build board detail view with tasks
+- Add task CRUD operations
+- Implement drag-and-drop for tasks
 
 ## Expanding the ESLint configuration
 
