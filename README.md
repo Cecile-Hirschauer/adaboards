@@ -1,8 +1,20 @@
 # AdaBoards 📋
 
-A modern, offline-first React + TypeScript project management application with Kanban boards, built with Vite, Tailwind CSS v4, and React Query.
+A modern, offline-first React + TypeScript project management application with Kanban boards, built with Vite, Tailwind CSS v4, React Query, and complete authentication system.
 
 ## ✨ Features
+
+### Authentication System
+- ✅ **User Registration**: Create account with email, password, and name via `POST /auth/register`
+- ✅ **User Login**: Secure authentication via `POST /auth/login`
+- ✅ **User Logout**: Clear session and redirect to landing
+- ✅ **Protected Routes**: `/boards` and `/boards/:id` require authentication
+- ✅ **Public Routes**: Auto-redirect to `/boards` if already authenticated
+- ✅ **Session Management**: Token-based auth with automatic expiration (7 days)
+- ✅ **Mock Authentication**: Local user storage for development mode
+- ✅ **Form Validation**: Zod schemas for email, password, and registration
+- ✅ **Error Handling**: Clear error messages for invalid credentials
+- ✅ **AuthContext**: Global authentication state without page refresh
 
 ### Board Management
 - ✅ View all boards with real-time updates
@@ -10,6 +22,7 @@ A modern, offline-first React + TypeScript project management application with K
 - ✅ Delete boards with `DELETE /boards/{boardId}`
 - ✅ Navigate between boards
 - ✅ Last update timestamp on each board
+- ✅ Personalized greeting with user's name
 
 ### Task Management (Kanban)
 - ✅ **Three columns**: To Do, Doing, Done
@@ -35,10 +48,12 @@ A modern, offline-first React + TypeScript project management application with K
 ### UI/UX
 - ✅ **Dark mode**: Theme toggle with system preference detection
 - ✅ **Responsive design**: Mobile-first (min-width: 320px)
-- ✅ **Clean CSS**: Tailwind v4 with `@theme` (unified `--color-*` variables)
+- ✅ **Clean CSS**: Tailwind v4 with standardized RGB variables (`rgb(var(--primary))`)
 - ✅ **Accessible**: ARIA labels, keyboard navigation
 - ✅ **Smooth animations**: Hover effects, transitions
 - ✅ **Color-coded columns**: Yellow (To Do), Cyan (Doing), Green (Done)
+- ✅ **Dynamic UI**: Auth state updates without page refresh
+- ✅ **User-specific content**: Personalized greetings and user info
 
 ### Developer Experience
 - ✅ **TypeScript**: Full type safety
@@ -101,14 +116,17 @@ npm run lint
 ```
 src/
 ├── components/
+│   ├── auth/
+│   │   ├── ProtectedRoute.tsx  # Route guard for authenticated pages
+│   │   └── PublicRoute.tsx     # Route guard for public pages
 │   ├── Board/
-│   │   ├── BoardCard.tsx      # Board preview card
-│   │   ├── BoardHeader.tsx    # Board view header with search
+│   │   ├── BoardCard.tsx       # Board preview card
+│   │   ├── BoardHeader.tsx     # Board view header with search
 │   │   └── Column.tsx          # Kanban column (To Do/Doing/Done)
 │   ├── Task/
 │   │   └── TaskCard.tsx        # Task card with inline edit
 │   ├── shared/
-│   │   ├── Header.tsx          # App header
+│   │   ├── Header.tsx          # App header with auth buttons
 │   │   ├── Footer.tsx          # App footer
 │   │   └── Logo.tsx            # App logo
 │   └── ui/
@@ -117,45 +135,62 @@ src/
 │       ├── card.tsx            # Card component
 │       └── theme-toggle.tsx    # Dark mode toggle
 ├── pages/
-│   ├── Landing.tsx             # Landing page
-│   ├── Login.tsx               # Login page
-│   ├── Signup.tsx              # Signup page
-│   ├── Boards.tsx              # Boards list (home)
-│   └── BoardView.tsx           # Board detail with tasks
+│   ├── Landing.tsx             # Landing page (public)
+│   ├── Login.tsx               # Login page with form validation
+│   ├── Signup.tsx              # Signup page with form validation
+│   ├── Boards.tsx              # Boards list (protected)
+│   └── BoardView.tsx           # Board detail with tasks (protected)
 ├── hooks/
+│   ├── useAuth.ts              # Authentication hook
 │   ├── useBoards.ts            # Board management (React Query)
 │   └── useTasks.ts             # Task management (React Query)
 ├── services/
-│   └── api.ts                  # API service with mock mode
+│   └── api.ts                  # API service with mock auth
 ├── lib/
 │   └── queryClient.ts          # React Query + localStorage config
 ├── contexts/
+│   ├── AuthContext.tsx         # Authentication context
 │   └── ThemeContext.tsx        # Dark mode context
+├── schemas/
+│   └── auth.schema.ts          # Zod validation schemas
 ├── types/
 │   └── index.ts                # TypeScript types
 └── utils/
+    ├── auth.ts                 # Auth storage helpers
+    ├── mockAuth.ts             # Mock user management
     └── constants.ts            # App constants
 ```
 
 ## 🎨 CSS Architecture
 
-### Tailwind v4 with `@theme`
+### Tailwind v4 with CSS Variables
+
+Unified CSS variables using shadcn/ui format:
 
 ```css
-@theme {
-  /* Couleurs Kanban */
-  --color-todo: #fbbf24;      /* bg-todo, text-todo, border-todo */
-  --color-doing: #22d3ee;     /* bg-doing, text-doing, border-doing */
-  --color-done: #34d399;      /* bg-done, text-done, border-done */
-  --color-error: #f87171;
-  --color-primary: #c4b5fd;
+:root {
+  /* shadcn/ui RGB format for Tailwind */
+  --primary: 196 181 253;              /* bg-[rgb(var(--primary))] */
+  --primary-foreground: 43 45 49;      /* text-[rgb(var(--primary-foreground))] */
+  --background: 255 255 255;
+  --foreground: 43 45 49;
+  --destructive: 248 113 113;
+  /* ... */
 
-  /* Couleurs grises */
-  --color-gray-800: #2b2d31;
-  --color-gray-700: #3d3f45;
+  /* Kanban colors (hex format) */
+  --color-todo: #fbbf24;
+  --color-doing: #22d3ee;
+  --color-done: #34d399;
+}
+
+.dark {
+  --background: 43 45 49;
+  --foreground: 255 255 255;
   /* ... */
 }
 ```
+
+**Usage**: `bg-[rgb(var(--primary))]` instead of `bg-primary` for better control.
 
 ## 💾 Offline-First with React Query
 
@@ -180,12 +215,14 @@ refetchOnWindowFocus: true // Sync on tab focus
 
 ### localStorage
 
-Data saved in `localStorage['adaboards-cache']`:
-- All boards
-- All tasks per board
-- Query metadata (timestamp, state)
+Data saved in localStorage:
 
-**See in DevTools**: Application → Local Storage → `adaboards-cache`
+- **`adaboards-cache`**: React Query cache (boards, tasks)
+- **`adaboards_auth_token`**: Auth token with expiration (7 days)
+- **`adaboards_user`**: Current user data (id, email, name)
+- **`adaboards_mock_users`**: Mock user database (development only)
+
+**See in DevTools**: Application → Local Storage
 
 ## 🔧 API Service
 
@@ -212,6 +249,10 @@ VITE_API_BASE_URL=https://your-api.com
 
 | Method | Route | Description |
 |--------|-------|-------------|
+| `POST` | `/auth/register` | Register new user |
+| `POST` | `/auth/login` | Login user |
+| `POST` | `/auth/logout` | Logout user |
+| `POST` | `/auth/validate` | Validate token |
 | `GET` | `/boards` | Get all boards |
 | `POST` | `/boards` | Create board |
 | `DELETE` | `/boards/{boardId}` | Delete board |
@@ -221,6 +262,18 @@ VITE_API_BASE_URL=https://your-api.com
 | `DELETE` | `/boards/{boardId}/tasks/{taskId}` | Delete task |
 
 ## 🧪 Testing
+
+### Test Authentication
+
+```bash
+1. Go to /signup → Create account (email, password, name)
+2. Check localStorage → 'adaboards_auth_token' exists ✅
+3. Logout → Token cleared ✅
+4. Try login with wrong password → Error message ✅
+5. Login with correct credentials → Redirected to /boards ✅
+6. Try accessing /login while authenticated → Redirected to /boards ✅
+7. Try accessing /boards while logged out → Redirected to /login ✅
+```
 
 ### Test localStorage persistence
 
@@ -249,9 +302,12 @@ VITE_API_BASE_URL=https://your-api.com
 
 ## 🎯 Key Features Implementation
 
-### React Query Hooks
+### React Hooks
 
 ```typescript
+// useAuth - Authentication management
+const { user, isAuthenticated, login, register, logout } = useAuth();
+
 // useBoards - Board management
 const { boards, loading, createBoard, deleteBoard } = useBoards();
 
@@ -280,12 +336,31 @@ All mutations use optimistic updates:
 ## 🚧 Roadmap
 
 ### Completed ✅
-- [x] Boards CRUD
-- [x] Tasks CRUD
-- [x] Kanban columns with drag-free movement
-- [x] Inline task editing
-- [x] localStorage persistence
-- [x] Offline mode
-- [x] Dark mode
-- [x] Responsive design
-- [x] Performance optimization (98% Lighthouse)
+
+- [x] **Authentication System**
+  - [x] User registration with validation
+  - [x] User login with error handling
+  - [x] Session management with token expiration
+  - [x] Protected routes
+  - [x] Public route redirects
+  - [x] Mock authentication for development
+- [x] **Board Management**
+  - [x] Boards CRUD operations
+  - [x] Personalized user greetings
+- [x] **Task Management**
+  - [x] Tasks CRUD operations
+  - [x] Kanban columns with drag-free movement
+  - [x] Inline task editing
+  - [x] Task filtering
+- [x] **Data Persistence**
+  - [x] localStorage persistence
+  - [x] Offline mode support
+  - [x] React Query caching
+- [x] **UI/UX**
+  - [x] Dark mode with theme toggle
+  - [x] Responsive design (mobile-first)
+  - [x] Clean CSS architecture
+  - [x] Accessible components
+- [x] **Performance**
+  - [x] Code splitting & lazy loading
+  - [x] Performance optimization (98% Lighthouse)
