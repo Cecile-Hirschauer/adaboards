@@ -247,13 +247,6 @@ VITE_API_BASE_URL=https://your-api.com
 3. Focus tab 2 → Auto sync ✅
 ```
 
-## 📚 Documentation
-
-- 📖 [LOCALSTORAGE_IMPLEMENTATION.md](LOCALSTORAGE_IMPLEMENTATION.md) - Offline-first architecture explained
-- 📖 [REFACTORING_COMPLETE.md](REFACTORING_COMPLETE.md) - CSS refactoring details
-- 📖 [REFACTORING_TAILWIND_V4.md](REFACTORING_TAILWIND_V4.md) - Tailwind v4 migration guide
-- 📖 [LOCALSTORAGE_SYNC.md](LOCALSTORAGE_SYNC.md) - Sync strategies comparison
-
 ## 🎯 Key Features Implementation
 
 ### React Query Hooks
