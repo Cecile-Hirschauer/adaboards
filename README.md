@@ -81,7 +81,6 @@ npm run preview  # Preview production build
    - `/signup` - Signup page
    - `/boards` - Boards list
    - `/boards/:id` - Board detail view
- 
 
 4. **Code Quality**
    - TypeScript configuration with path aliases (`@/*`)

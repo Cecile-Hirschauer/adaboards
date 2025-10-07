@@ -75,7 +75,7 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
         </p>
       )}
 
-      <div className="flex items-center gap-2">
+      <div className={`flex items-center ${canMoveLeft && canMoveRight ? 'justify-between' : canMoveRight ? 'justify-end' : 'justify-start'}`}>
         {canMoveLeft && onMoveLeft && (
           <button
             onClick={onMoveLeft}
@@ -89,7 +89,7 @@ export default function TaskCard({ task, status, onMoveLeft, onMoveRight, onDele
         {canMoveRight && onMoveRight && (
           <button
             onClick={onMoveRight}
-            className={`w-7 h-7 bg-[var(--color-gray-800)] rounded flex items-center justify-center hover:bg-[var(--color-muted-background)] transition-colors focus:outline-none focus:ring-2 focus:ring-white ${!canMoveLeft ? '' : 'ml-auto'}`}
+            className="w-7 h-7 bg-[var(--color-gray-800)] rounded flex items-center justify-center hover:bg-[var(--color-muted-background)] transition-colors focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Move task right"
           >
             <ChevronRight className="w-4 h-4 text-white" />

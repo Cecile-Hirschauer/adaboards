@@ -14,7 +14,7 @@ export default function BoardView() {
   const [boardName] = useState('Dataviz');
   const [filter, setFilter] = useState('');
 
-  const { tasks, createTask, updateTask, patchTask, deleteTask, loading, error } = useTasks(boardId);
+  const { tasks, createTask, patchTask, deleteTask, loading, error } = useTasks(boardId);
 
   const handleBack = () => {
     navigate('/boards');
@@ -39,7 +39,7 @@ export default function BoardView() {
     }
 
     if (newStatus !== task.status) {
-      await updateTask(taskId, { status: newStatus });
+      await patchTask(taskId, { status: newStatus });
     }
   };
 
