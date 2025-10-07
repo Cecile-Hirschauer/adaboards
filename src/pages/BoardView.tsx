@@ -6,12 +6,7 @@ import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
 import { useTasks } from '@/hooks/useTasks';
 
-interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  status: TaskStatus;
-}
+
 
 export default function BoardView() {
   const navigate = useNavigate();
@@ -19,7 +14,7 @@ export default function BoardView() {
   const [boardName] = useState('Dataviz');
   const [filter, setFilter] = useState('');
 
-  const { tasks, createTask, updateTask, deleteTask, isCreating } = useTasks(boardId);
+  const { tasks, createTask, updateTask, deleteTask, loading, error } = useTasks(boardId);
 
   const handleBack = () => {
     navigate('/boards');
@@ -58,6 +53,36 @@ export default function BoardView() {
       status,
     });
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-hidden">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[rgb(var(--primary))] border-r-transparent" role="status" aria-label="Loading">
+              <span className="sr-only">Loading...</span>
+            </div>
+            <p className="mt-4 text-[rgb(var(--muted-foreground))]">Loading tasks...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-hidden">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-500">Error: {error}</p>
+            <p className="mt-2 text-[rgb(var(--muted-foreground))]">Unable to load tasks. Please check your API connection.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const filteredTasks = tasks.filter(task =>
     task.title.toLowerCase().includes(filter.toLowerCase())

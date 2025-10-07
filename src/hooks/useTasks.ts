@@ -24,9 +24,9 @@ export function useTasks(boardId: string) {
   const createTaskMutation = useMutation({
     mutationFn: (data: { title: string; status: TaskStatus; description?: string }) =>
       api.createTask(boardId, data),
-    onSuccess: () => {
-      // Invalidate and refetch tasks after creation
-      queryClient.invalidateQueries({ queryKey: getTasksQueryKey(boardId) });
+    onSuccess: (newTask) => {
+      // Mettre à jour le cache avec la nouvelle tâche
+      queryClient.setQueryData<Task[]>(getTasksQueryKey(boardId), (old = []) => [...old, newTask]);
     },
   });
 
@@ -34,16 +34,24 @@ export function useTasks(boardId: string) {
   const updateTaskMutation = useMutation({
     mutationFn: ({ taskId, data }: { taskId: string; data: Partial<Task> }) =>
       api.updateTask(taskId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getTasksQueryKey(boardId) });
+    onSuccess: (_, { taskId, data }) => {
+      // Mise à jour optimiste du cache
+      queryClient.setQueryData<Task[]>(getTasksQueryKey(boardId), (old = []) =>
+        old.map((task) =>
+          task.id === taskId ? { ...task, ...data, updatedAt: new Date() } : task
+        )
+      );
     },
   });
 
   // Mutation for deleting a task
   const deleteTaskMutation = useMutation({
     mutationFn: (taskId: string) => api.deleteTask(taskId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getTasksQueryKey(boardId) });
+    onSuccess: (_, taskId) => {
+      // Supprimer la tâche du cache
+      queryClient.setQueryData<Task[]>(getTasksQueryKey(boardId), (old = []) =>
+        old.filter((task) => task.id !== taskId)
+      );
     },
   });
 
