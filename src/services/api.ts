@@ -200,12 +200,12 @@ class ApiService {
     });
   }
 
-  async deleteTask(taskId: string): Promise<void> {
+  async deleteTask(boardId: string, taskId: string): Promise<void> {
     if (USE_MOCK) {
       // Simuler la suppression
       return Promise.resolve();
     }
-    return this.request(`/tasks/${taskId}`, {
+    return this.request(`/boards/${boardId}/tasks/${taskId}`, {
       method: 'DELETE',
     });
   }

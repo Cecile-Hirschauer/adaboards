@@ -60,7 +60,7 @@ export function useTasks(boardId: string) {
 
   // Mutation for deleting a task
   const deleteTaskMutation = useMutation({
-    mutationFn: (taskId: string) => api.deleteTask(taskId),
+    mutationFn: (taskId: string) => api.deleteTask(boardId, taskId),
     onSuccess: (_, taskId) => {
       // Supprimer la tâche du cache
       queryClient.setQueryData<Task[]>(getTasksQueryKey(boardId), (old = []) =>
