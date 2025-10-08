@@ -1,6 +1,7 @@
 // Boards page - displays user's boards
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useBoards } from '@/hooks/useBoards';
@@ -152,6 +153,8 @@ export default function Boards() {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }

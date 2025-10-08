@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { TaskStatus } from '@/types';
 import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
+import { Footer } from '@/components/shared/Footer';
 import { useTasks } from '@/hooks/useTasks';
 
 
@@ -136,6 +137,8 @@ export default function BoardView() {
           />
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
