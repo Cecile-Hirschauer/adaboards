@@ -1,23 +1,44 @@
 // Board view page - Kanban board with tasks
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TaskStatus } from '@/types';
 import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
 import { Footer } from '@/components/shared/Footer';
 import { InviteMemberModal } from '@/components/Board/InviteMemberModal';
+import { MembersList } from '@/components/Board/MembersList';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useTasks } from '@/hooks/useTasks';
+import { useBoard } from '@/hooks/useBoards';
 
 
 
 export default function BoardView() {
   const navigate = useNavigate();
-  const { id: boardId = 'default-board-id' } = useParams<{ id: string }>();
-  const [boardName] = useState('Dataviz');
+  const { id: boardId } = useParams<{ id: string }>();
   const [filter, setFilter] = useState('');
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
 
-  const { tasks, createTask, patchTask, deleteTask, loading, error } = useTasks(boardId);
+  // Récupérer les infos du board depuis l'API
+  const { board, isLoading: boardLoading, error: boardError } = useBoard(boardId || '');
+  const { tasks, createTask, patchTask, deleteTask, loading: tasksLoading, error: tasksError } = useTasks(boardId || '');
+
+  // Rediriger si le board n'existe pas ou l'utilisateur n'a pas accès
+  useEffect(() => {
+    if (!boardId) {
+      navigate('/boards');
+    } else if (boardError && !boardLoading) {
+      // Board non trouvé ou accès refusé
+      console.error('Board access error:', boardError);
+      alert('Vous n\'avez pas accès à ce board.');
+      navigate('/boards');
+    }
+  }, [boardId, boardError, boardLoading, navigate]);
+
+  const loading = boardLoading || tasksLoading;
+  const error = boardError || tasksError;
+  const boardName = board?.name || 'Board';
 
   const handleBack = () => {
     navigate('/boards');
@@ -25,6 +46,10 @@ export default function BoardView() {
 
   const handleInvite = () => {
     setIsInviteModalOpen(true);
+  };
+
+  const handleViewMembers = () => {
+    setIsMembersModalOpen(true);
   };
 
   const handleMoveTask = async (taskId: string, direction: 'left' | 'right') => {
@@ -106,6 +131,7 @@ export default function BoardView() {
           boardName={boardName}
           onBack={handleBack}
           onInvite={handleInvite}
+          onViewMembers={handleViewMembers}
           onFilterChange={setFilter}
         />
 
@@ -143,11 +169,28 @@ export default function BoardView() {
       <Footer />
 
       {/* Invite Member Modal */}
-      <InviteMemberModal
-        open={isInviteModalOpen}
-        onOpenChange={setIsInviteModalOpen}
-        boardName={boardName}
-      />
+      {boardId && (
+        <InviteMemberModal
+          open={isInviteModalOpen}
+          onOpenChange={setIsInviteModalOpen}
+          boardId={boardId}
+          boardName={boardName}
+        />
+      )}
+
+      {/* Members List Modal */}
+      {boardId && (
+        <Dialog open={isMembersModalOpen} onOpenChange={setIsMembersModalOpen}>
+          <DialogContent onClose={() => setIsMembersModalOpen(false)}>
+            <DialogHeader>
+              <DialogTitle>Membres du board</DialogTitle>
+            </DialogHeader>
+            <div className="max-h-[60vh] overflow-y-auto">
+              <MembersList boardId={boardId} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

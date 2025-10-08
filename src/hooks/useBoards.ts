@@ -4,6 +4,7 @@ import { api } from '../services/api';
 import type { Board } from '../types';
 
 const BOARDS_QUERY_KEY = ['boards'];
+const BOARD_QUERY_KEY = (id: string) => ['boards', id];
 
 export function useBoards() {
   const queryClient = useQueryClient();
@@ -54,5 +55,27 @@ export function useBoards() {
     updateBoard: (id: string, data: Partial<Board>) =>
       updateBoardMutation.mutateAsync({ id, data }),
     deleteBoard: deleteBoardMutation.mutateAsync,
+  };
+}
+
+/**
+ * Hook pour récupérer un board spécifique
+ */
+export function useBoard(boardId: string) {
+  const {
+    data: board,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: BOARD_QUERY_KEY(boardId),
+    queryFn: () => api.getBoard(boardId),
+    enabled: !!boardId && boardId !== 'default-board-id',
+    retry: false, // Ne pas réessayer si accès refusé
+  });
+
+  return {
+    board,
+    isLoading,
+    error: error ? (error instanceof Error ? error.message : 'An error occurred') : null,
   };
 }
