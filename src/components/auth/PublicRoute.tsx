@@ -21,17 +21,22 @@ import { useAuth } from '@/hooks/useAuth';
 export function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
 
+  console.log('[PublicRoute] isAuthenticated:', isAuthenticated, 'isLoading:', isLoading);
+
   // Pendant le chargement, ne rien afficher
   // (évite un flash de la page de login)
   if (isLoading) {
+    console.log('[PublicRoute] Loading - affichage de rien');
     return null;
   }
 
   // Si déjà authentifié, rediriger vers /boards
   if (isAuthenticated) {
+    console.log('[PublicRoute] Authentifié - redirection vers /boards');
     return <Navigate to="/boards" replace />;
   }
 
   // Si pas authentifié, afficher le contenu
+  console.log('[PublicRoute] Non authentifié - affichage du contenu');
   return <>{children}</>;
 }

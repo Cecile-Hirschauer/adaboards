@@ -1,6 +1,7 @@
 // Boards page - displays user's boards
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useBoards } from '@/hooks/useBoards';
@@ -69,10 +70,10 @@ export default function Boards() {
     <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-auto">
       <Header showSignInButton={false} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 w-full py-4 sm:py-6 md:py-8">
+      <main className="flex-1 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 w-full py-4 sm:py-6 md:py-8">
         {/* Greeting Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 md:mb-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold">
             <span className="text-[rgb(var(--foreground))]">Hello</span>
             {user?.name && (
               <>
@@ -95,7 +96,7 @@ export default function Boards() {
         </div>
 
         {/* Boards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
           {boards.map((board) => (
             <article
               key={board.id}
@@ -152,6 +153,8 @@ export default function Boards() {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { TaskStatus } from '@/types';
 import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
+import { Footer } from '@/components/shared/Footer';
+import { InviteMemberModal } from '@/components/Board/InviteMemberModal';
 import { useTasks } from '@/hooks/useTasks';
 
 
@@ -13,6 +15,7 @@ export default function BoardView() {
   const { id: boardId = 'default-board-id' } = useParams<{ id: string }>();
   const [boardName] = useState('Dataviz');
   const [filter, setFilter] = useState('');
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const { tasks, createTask, patchTask, deleteTask, loading, error } = useTasks(boardId);
 
@@ -21,7 +24,7 @@ export default function BoardView() {
   };
 
   const handleInvite = () => {
-    console.log('Open invite modal');
+    setIsInviteModalOpen(true);
   };
 
   const handleMoveTask = async (taskId: string, direction: 'left' | 'right') => {
@@ -98,7 +101,7 @@ export default function BoardView() {
 
   return (
     <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-hidden">
-      <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-hidden">
+      <div className="flex-1 flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4 sm:py-6 md:py-8 overflow-hidden">
         <BoardHeader
           boardName={boardName}
           onBack={handleBack}
@@ -106,7 +109,7 @@ export default function BoardView() {
           onFilterChange={setFilter}
         />
 
-        <div className="flex-1 flex gap-4 sm:gap-6 overflow-x-auto pb-4">
+        <div className="flex-1 flex gap-4 sm:gap-5 md:gap-6 lg:gap-8 overflow-x-auto pb-4">
           <Column
             title="To Do"
             tasks={todoTasks}
@@ -136,6 +139,15 @@ export default function BoardView() {
           />
         </div>
       </div>
+
+      <Footer />
+
+      {/* Invite Member Modal */}
+      <InviteMemberModal
+        open={isInviteModalOpen}
+        onOpenChange={setIsInviteModalOpen}
+        boardName={boardName}
+      />
     </div>
   );
 }
