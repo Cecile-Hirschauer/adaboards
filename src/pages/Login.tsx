@@ -1,17 +1,42 @@
 // Login page
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
+import { useAuth } from '@/hooks/useAuth';
+import { loginSchema, type LoginFormData } from '@/schemas/auth.schema';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login:', { email, password });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      setError(null);
+      setIsLoading(true);
+      await login(data.email, data.password);
+
+      // Redirect to the page the user tried to access or /boards
+      const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/boards';
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,7 +58,14 @@ export default function Login() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+            {/* Error Message */}
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500 rounded-lg">
+                <p className="text-red-500 text-sm">{error}</p>
+              </div>
+            )}
+
             {/* Email */}
             <div>
               <label
@@ -43,15 +75,16 @@ export default function Login() {
                 Email *
               </label>
               <input
+                {...register('email')}
                 id="email"
                 type="email"
                 placeholder="ada@adatechschool.fr"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
-                required
-                aria-required="true"
+                aria-invalid={errors.email ? 'true' : 'false'}
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -63,23 +96,25 @@ export default function Login() {
                 Password *
               </label>
               <input
+                {...register('password')}
                 id="password"
                 type="password"
                 placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
-                required
-                aria-required="true"
+                aria-invalid={errors.password ? 'true' : 'false'}
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2.5 sm:py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-6 sm:mt-8 text-sm sm:text-base"
+              disabled={isLoading}
+              className="w-full py-2.5 sm:py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-6 sm:mt-8 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign in
+              {isLoading ? 'Connexion...' : 'Sign in'}
             </button>
 
             {/* Sign up Link */}

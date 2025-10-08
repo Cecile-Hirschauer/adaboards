@@ -4,25 +4,19 @@ import { Header } from '@/components/shared/Header';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useBoards } from '@/hooks/useBoards';
+import { useAuth } from '@/hooks/useAuth';
+import { getRelativeDate } from '@/utils/relativeDate';
 
 export default function Boards() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { boards, loading, error, deleteBoard: deleteBoardApi, createBoard: createBoardApi, loadBoards } = useBoards();
 
   const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
+    const updatedAt = new Date(dateString);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
-
-    if (diffInMinutes < 60) {
-      return `Edited ${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
-    } else if (diffInMinutes < 1440) {
-      const hours = Math.floor(diffInMinutes / 60);
-      return `Edited ${hours} hour${hours > 1 ? 's' : ''} ago`;
-    } else {
-      const days = Math.floor(diffInMinutes / 1440);
-      return `Edited ${days} day${days > 1 ? 's' : ''} ago`;
-    }
+    return `Edited ${getRelativeDate(updatedAt, now)}`
+   
   };
 
   const handleDeleteBoard = async (id: string) => {
@@ -47,8 +41,6 @@ export default function Boards() {
   const handleOpenBoard = (id: string) => {
     navigate(`/boards/${id}`);
   };
-
-  const userName = 'Ada Lovelace';
 
   if (loading) {
     return (
@@ -81,10 +73,15 @@ export default function Boards() {
         {/* Greeting Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8 md:mb-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
-            <span className="text-[rgb(var(--foreground))]">Hello, </span>
-            <span className="text-[rgb(var(--primary))]" style={{ fontFamily: 'var(--font-handwriting)' }}>
-              {userName}
-            </span>
+            <span className="text-[rgb(var(--foreground))]">Hello</span>
+            {user?.name && (
+              <>
+                <span className="text-[rgb(var(--foreground))]">, </span>
+                <span className="text-[rgb(var(--primary))]" style={{ fontFamily: 'var(--font-handwriting)' }}>
+                  {user.name}
+                </span>
+              </>
+            )}
             <span className="text-[rgb(var(--foreground))]"> !</span>
           </h1>
           <Button

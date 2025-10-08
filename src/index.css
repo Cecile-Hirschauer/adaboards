@@ -1,27 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@400;700&display=swap');
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-  /* Couleurs Kanban */
-  --color-todo: #fbbf24;
-  --color-doing: #22d3ee;
-  --color-done: #34d399;
-  --color-error: #f87171;
-  --color-primary: #c4b5fd;
-  --color-primary-dark: #a78bfa;
-
-  /* Couleurs grises */
-  --color-gray-800: #2b2d31;
-  --color-gray-700: #3d3f45;
-  --color-gray-600: #4a4c52;
-  --color-gray-500: #71717a;
-  --color-gray-400: #9ca3af;
-  --color-white: #ffffff;
-
-  /* Fonts */
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-handwriting: "Dancing Script", cursive;
-}
 
 @layer base {
   :root {
@@ -46,6 +26,15 @@
     --input: 228 228 231;
     --ring: 196 181 253;
     --radius: 0.5rem;
+
+    /* Fonts */
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-handwriting: "Dancing Script", cursive;
+
+    /* Couleurs Kanban (hex pour compatibilité) */
+    --color-todo: #fbbf24;
+    --color-doing: #22d3ee;
+    --color-done: #34d399;
   }
 
   .dark {
@@ -76,8 +65,8 @@
   }
 
   body {
-    background-color: var(--color-gray-800);
-    color: var(--color-white);
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

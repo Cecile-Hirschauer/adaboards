@@ -1,18 +1,40 @@
 // Signup page
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
+import { useAuth } from '@/hooks/useAuth';
+import { registerSchema, type RegisterFormData } from '@/schemas/auth.schema';
 
 export default function Signup() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const { register: registerUser } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement signup logic
-    console.log('Signup:', { name, email, password });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      setError(null);
+      setIsLoading(true);
+      await registerUser(data.email, data.password, data.name);
+
+      // Rediriger vers /boards après inscription réussie
+      navigate('/boards', { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -34,25 +56,33 @@ export default function Signup() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+            {/* Error Message */}
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500 rounded-lg">
+                <p className="text-red-500 text-sm">{error}</p>
+              </div>
+            )}
+
             {/* Fullname */}
             <div>
               <label
                 htmlFor="name"
                 className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
               >
-                Fullname
+                Fullname *
               </label>
               <input
+                {...register('name')}
                 id="name"
                 type="text"
                 placeholder="Ada Lovelace"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
-                required
-                aria-required="true"
+                aria-invalid={errors.name ? 'true' : 'false'}
               />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -61,18 +91,19 @@ export default function Signup() {
                 htmlFor="email"
                 className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
               >
-                Email
+                Email *
               </label>
               <input
+                {...register('email')}
                 id="email"
                 type="email"
                 placeholder="ada@adatechschool.fr"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
-                required
-                aria-required="true"
+                aria-invalid={errors.email ? 'true' : 'false'}
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -81,26 +112,49 @@ export default function Signup() {
                 htmlFor="password"
                 className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
               >
-                Password
+                Password *
               </label>
               <input
+                {...register('password')}
                 id="password"
                 type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="At least 6 characters"
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
-                required
-                aria-required="true"
+                aria-invalid={errors.password ? 'true' : 'false'}
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-[rgb(var(--foreground))] text-sm font-medium mb-2"
+              >
+                Confirm Password *
+              </label>
+              <input
+                {...register('confirmPassword')}
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-transparent border-2 border-[rgb(var(--border))] rounded-lg text-[rgb(var(--foreground))] placeholder-[rgb(var(--muted-foreground))] focus:outline-none focus:border-[rgb(var(--primary))] transition-colors text-sm sm:text-base"
+                aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+              />
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2.5 sm:py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-6 sm:mt-8 text-sm sm:text-base"
+              disabled={isLoading}
+              className="w-full py-2.5 sm:py-3 bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] font-semibold rounded-lg hover:opacity-90 transition-opacity mt-6 sm:mt-8 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create my account
+              {isLoading ? 'Création du compte...' : 'Create my account'}
             </button>
 
             {/* Sign in Link */}

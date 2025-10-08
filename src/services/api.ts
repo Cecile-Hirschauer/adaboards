@@ -2,6 +2,7 @@
 import { API_BASE_URL, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import type { User, Board, Task } from '../types';
 import { TaskStatus } from '../types';
+import { mockAuth } from '../utils/mockAuth';
 
 /**
  * Mode mock : Détermine si on utilise des données mockées ou l'API réelle
@@ -46,16 +47,83 @@ class ApiService {
 
   // Auth
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
+    if (USE_MOCK) {
+      // Simuler un délai réseau
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Vérifier que l'utilisateur existe et que le mot de passe est correct
+      const user = mockAuth.authenticate(email, password);
+
+      if (!user) {
+        throw new Error('Email ou mot de passe incorrect');
+      }
+
+      return Promise.resolve({
+        user,
+        token: 'mock-jwt-token-' + Date.now(),
+      });
+    }
+
     return this.request('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
   }
 
-  async signup(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
-    return this.request('/auth/signup', {
+  async register(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
+    if (USE_MOCK) {
+      // Simuler un délai réseau
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Vérifier que l'email n'est pas déjà utilisé
+      if (mockAuth.userExists(email)) {
+        throw new Error('Cet email est déjà utilisé');
+      }
+
+      // Créer le nouvel utilisateur
+      const user: User = {
+        id: Date.now().toString(),
+        email,
+        name,
+        createdAt: new Date(),
+      };
+
+      // Sauvegarder l'utilisateur dans le mock storage
+      mockAuth.saveUser(email, password, user);
+
+      return Promise.resolve({
+        user,
+        token: 'mock-jwt-token-' + Date.now(),
+      });
+    }
+
+    return this.request('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
+    });
+  }
+
+  async logout(): Promise<void> {
+    if (USE_MOCK) {
+      return Promise.resolve();
+    }
+
+    return this.request('/auth/logout', {
+      method: 'POST',
+    });
+  }
+
+  async validateToken(token: string): Promise<{ valid: boolean }> {
+    if (USE_MOCK) {
+      // En mode mock, vérifier que le token existe et n'est pas expiré
+      // Pour simplifier, on considère qu'un token mock est valide s'il existe
+      // En production, cela ferait un vrai appel API
+      return Promise.resolve({ valid: !!token });
+    }
+
+    return this.request('/auth/validate', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
     });
   }
 
