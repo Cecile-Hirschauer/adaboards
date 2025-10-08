@@ -5,6 +5,7 @@ import { TaskStatus } from '@/types';
 import BoardHeader from '@/components/Board/BoardHeader';
 import Column from '@/components/Board/Column';
 import { Footer } from '@/components/shared/Footer';
+import { InviteMemberModal } from '@/components/Board/InviteMemberModal';
 import { useTasks } from '@/hooks/useTasks';
 
 
@@ -14,6 +15,7 @@ export default function BoardView() {
   const { id: boardId = 'default-board-id' } = useParams<{ id: string }>();
   const [boardName] = useState('Dataviz');
   const [filter, setFilter] = useState('');
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const { tasks, createTask, patchTask, deleteTask, loading, error } = useTasks(boardId);
 
@@ -22,7 +24,7 @@ export default function BoardView() {
   };
 
   const handleInvite = () => {
-    console.log('Open invite modal');
+    setIsInviteModalOpen(true);
   };
 
   const handleMoveTask = async (taskId: string, direction: 'left' | 'right') => {
@@ -139,6 +141,13 @@ export default function BoardView() {
       </div>
 
       <Footer />
+
+      {/* Invite Member Modal */}
+      <InviteMemberModal
+        open={isInviteModalOpen}
+        onOpenChange={setIsInviteModalOpen}
+        boardName={boardName}
+      />
     </div>
   );
 }
