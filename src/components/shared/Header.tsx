@@ -96,7 +96,7 @@ export const Header = ({
 
   // Default variant layout
   return (
-    <header className="flex justify-between items-center px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 max-w-[1280px] mx-auto w-full">
+    <header className="flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4 sm:py-5 md:py-6 w-full">
       {/* Logo */}
       {leftContent || (
         <a
@@ -104,8 +104,8 @@ export const Header = ({
           className="flex items-center gap-1.5 sm:gap-2 md:gap-3 no-underline text-[rgb(var(--foreground))] hover:opacity-80 transition-opacity"
           aria-label="AdaBoards Home"
         >
-          <Logo className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
-          <span className="text-base sm:text-xl md:text-2xl font-semibold">AdaBoards</span>
+          <Logo className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
+          <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold">AdaBoards</span>
         </a>
       )}
 

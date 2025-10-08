@@ -34,13 +34,13 @@ export default function Column({ title, tasks, status, onAddTask, onMoveTask, on
 
   return (
     <section
-      className={`flex-1 min-w-[280px] sm:min-w-[320px] border-2 ${borderColors[status]} rounded-xl p-4 bg-[rgb(var(--card))]`}
+      className={`flex-1 min-w-[300px] sm:min-w-[340px] md:min-w-[360px] lg:min-w-[400px] border-2 ${borderColors[status]} rounded-xl p-4 sm:p-5 md:p-6 bg-[rgb(var(--card))]`}
       aria-labelledby={`column-${status}`}
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 sm:mb-5">
         <h2
           id={`column-${status}`}
-          className={`${headerColors[status]} text-xl sm:text-2xl font-semibold`}
+          className={`${headerColors[status]} text-xl sm:text-2xl md:text-3xl font-semibold`}
         >
           {title}
         </h2>

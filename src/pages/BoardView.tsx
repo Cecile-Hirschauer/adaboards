@@ -98,7 +98,7 @@ export default function BoardView() {
 
   return (
     <div className="h-screen flex flex-col bg-[rgb(var(--background))] text-[rgb(var(--foreground))] overflow-hidden">
-      <div className="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-hidden">
+      <div className="flex-1 flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4 sm:py-6 md:py-8 overflow-hidden">
         <BoardHeader
           boardName={boardName}
           onBack={handleBack}
@@ -106,7 +106,7 @@ export default function BoardView() {
           onFilterChange={setFilter}
         />
 
-        <div className="flex-1 flex gap-4 sm:gap-6 overflow-x-auto pb-4">
+        <div className="flex-1 flex gap-4 sm:gap-5 md:gap-6 lg:gap-8 overflow-x-auto pb-4">
           <Column
             title="To Do"
             tasks={todoTasks}
