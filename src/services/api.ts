@@ -3,19 +3,19 @@ import { API_BASE_URL, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import type { User, Board, Task } from '../types';
 import { TaskStatus } from '../types';
 import { mockAuth } from '../utils/mockAuth';
+import { authService } from './auth.service';
 
 /**
  * Mode mock : Détermine si on utilise des données mockées ou l'API réelle
  *
  * Priorité :
  * 1. Variable d'environnement VITE_USE_MOCK (true/false)
- * 2. Sinon : true par défaut pour le développement local
+ * 2. Sinon : false par défaut (utilise l'API réelle)
  *
- * Pour utiliser l'API réelle :
- * - Créer un fichier .env avec VITE_USE_MOCK=false
- * - Ou modifier cette ligne directement
+ * Pour utiliser le mode mock :
+ * - Créer un fichier .env avec VITE_USE_MOCK=true
  */
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || true;
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 class ApiService {
   private getAuthToken(): string | null {
@@ -64,10 +64,8 @@ class ApiService {
       });
     }
 
-    return this.request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    // Déléguer à authService pour l'API réelle
+    return authService.login(email, password);
   }
 
   async register(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
@@ -97,10 +95,8 @@ class ApiService {
       });
     }
 
-    return this.request('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ email, password, name }),
-    });
+    // Déléguer à authService pour l'API réelle
+    return authService.register(email, password, name);
   }
 
   async logout(): Promise<void> {
@@ -108,9 +104,8 @@ class ApiService {
       return Promise.resolve();
     }
 
-    return this.request('/auth/logout', {
-      method: 'POST',
-    });
+    // Déléguer à authService pour l'API réelle
+    return authService.logout();
   }
 
   async validateToken(token: string): Promise<{ valid: boolean }> {
