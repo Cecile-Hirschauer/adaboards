@@ -1,9 +1,10 @@
 // API service for backend communication
-import { API_BASE_URL, LOCAL_STORAGE_KEYS } from '../utils/constants';
+import { API_BASE_URL } from '../utils/constants';
 import type { User, Board, Task } from '../types';
 import { TaskStatus } from '../types';
 import { mockAuth } from '../utils/mockAuth';
 import { authService } from './auth.service';
+import { authStorage } from '../utils/auth';
 
 /**
  * Mode mock : Détermine si on utilise des données mockées ou l'API réelle
@@ -19,7 +20,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 class ApiService {
   private getAuthToken(): string | null {
-    return localStorage.getItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
+    return authStorage.getToken();
   }
 
   private async request<T>(
