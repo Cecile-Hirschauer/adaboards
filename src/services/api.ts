@@ -1,6 +1,6 @@
 // API service for backend communication
 import { API_BASE_URL } from '../utils/constants';
-import type { User, Board, Task } from '../types';
+import type { User, Board, Task, Member, MemberRole } from '../types';
 import { TaskStatus } from '../types';
 import { mockAuth } from '../utils/mockAuth';
 import { authService } from './auth.service';
@@ -280,6 +280,65 @@ class ApiService {
       return Promise.resolve();
     }
     return this.request(`/boards/${boardId}/tasks/${taskId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Members
+  async searchUsers(query: string): Promise<User[]> {
+    if (USE_MOCK) {
+      // Mock: rechercher dans mockAuth
+      return Promise.resolve([]);
+    }
+    return this.request(`/users/search?q=${encodeURIComponent(query)}`);
+  }
+
+  async getBoardMembers(boardId: string): Promise<Member[]> {
+    if (USE_MOCK) {
+      return Promise.resolve([]);
+    }
+    return this.request(`/boards/${boardId}/members`);
+  }
+
+  async addBoardMember(boardId: string, userId: string, role: MemberRole): Promise<Member> {
+    if (USE_MOCK) {
+      return Promise.resolve({
+        id: Date.now().toString(),
+        userId,
+        boardId,
+        role,
+        joinedAt: new Date().toISOString(),
+        user: { id: userId, email: '', name: '', createdAt: new Date() },
+      });
+    }
+    return this.request(`/boards/${boardId}/members`, {
+      method: 'POST',
+      body: JSON.stringify({ userId, role }),
+    });
+  }
+
+  async updateMemberRole(boardId: string, userId: string, role: MemberRole): Promise<Member> {
+    if (USE_MOCK) {
+      return Promise.resolve({
+        id: Date.now().toString(),
+        userId,
+        boardId,
+        role,
+        joinedAt: new Date().toISOString(),
+        user: { id: userId, email: '', name: '', createdAt: new Date() },
+      });
+    }
+    return this.request(`/boards/${boardId}/members/${userId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ role }),
+    });
+  }
+
+  async removeBoardMember(boardId: string, userId: string): Promise<void> {
+    if (USE_MOCK) {
+      return Promise.resolve();
+    }
+    return this.request(`/boards/${boardId}/members/${userId}`, {
       method: 'DELETE',
     });
   }
