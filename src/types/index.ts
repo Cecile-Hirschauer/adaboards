@@ -29,3 +29,18 @@ export enum TaskStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE'
 }
+
+export interface Member {
+  id: string;
+  userId: string;
+  boardId: string;
+  role: MemberRole;
+  joinedAt: string;
+  user: User;
+}
+
+export enum MemberRole {
+  OWNER = 'OWNER',
+  MAINTAINER = 'MAINTAINER',
+  MEMBER = 'MEMBER'
+}

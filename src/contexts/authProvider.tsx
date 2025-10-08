@@ -1,26 +1,8 @@
-// Auth Context pour gérer l'état d'authentification globalement
-import { createContext, useState, useEffect, ReactNode } from 'react';
+// Auth Provider pour gérer l'état d'authentification globalement
+import { useState, useEffect, ReactNode } from 'react';
 import { api } from '@/services/api';
 import { authStorage } from '@/utils/auth';
-import type { User } from '@/types';
-
-/**
- * Type du contexte d'authentification
- */
-export interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-}
-
-/**
- * Context React pour l'authentification
- */
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext, type AuthContextType } from './authContext';
 
 /**
  * Provider d'authentification
