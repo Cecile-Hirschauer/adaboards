@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useBoards } from '@/hooks/useBoards';
 import { useAuth } from '@/hooks/useAuth';
+import { getRelativeDate } from '@/utils/relativeDate';
 
 export default function Boards() {
   const navigate = useNavigate();
@@ -12,19 +13,10 @@ export default function Boards() {
   const { boards, loading, error, deleteBoard: deleteBoardApi, createBoard: createBoardApi, loadBoards } = useBoards();
 
   const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
+    const updatedAt = new Date(dateString);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
-
-    if (diffInMinutes < 60) {
-      return `Edited ${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
-    } else if (diffInMinutes < 1440) {
-      const hours = Math.floor(diffInMinutes / 60);
-      return `Edited ${hours} hour${hours > 1 ? 's' : ''} ago`;
-    } else {
-      const days = Math.floor(diffInMinutes / 1440);
-      return `Edited ${days} day${days > 1 ? 's' : ''} ago`;
-    }
+    return `Edited ${getRelativeDate(updatedAt, now)}`
+   
   };
 
   const handleDeleteBoard = async (id: string) => {
