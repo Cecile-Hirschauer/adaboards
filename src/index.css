@@ -102,4 +102,16 @@
   .text-done {
     color: var(--color-done);
   }
+
+  .border-todo {
+    border-color: var(--color-todo);
+  }
+
+  .border-doing {
+    border-color: var(--color-doing);
+  }
+
+  .border-done {
+    border-color: var(--color-done);
+  }
 }
