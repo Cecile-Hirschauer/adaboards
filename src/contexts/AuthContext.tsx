@@ -1,6 +1,5 @@
 // Auth Context pour gérer l'état d'authentification globalement
 import { createContext, useState, useEffect, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { api } from '@/services/api';
 import { authStorage } from '@/utils/auth';
 import type { User } from '@/types';
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   /**
    * Charger l'utilisateur depuis localStorage au montage
@@ -111,21 +109,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Déconnexion
    */
-  const logout = async () => {
-    try {
-      // Appeler l'API de déconnexion (optionnel en mode mock)
-      await api.logout();
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-    } finally {
-      // Toujours nettoyer le state et localStorage
-      setUser(null);
-      setToken(null);
-      authStorage.clear();
+  const logout = () => {
+    console.log('[AuthContext] Logout - Début');
 
-      // Rediriger vers la page de connexion
-      navigate('/login');
-    }
+    // Nettoyer le state et localStorage AVANT de rediriger
+    console.log('[AuthContext] Logout - Nettoyage state et localStorage');
+    setUser(null);
+    setToken(null);
+    authStorage.clear();
+
+    // Rediriger vers la page d'accueil (Landing) avec un rechargement complet
+    console.log('[AuthContext] Logout - Redirection vers / avec window.location');
+    window.location.href = '/';
   };
 
   const value: AuthContextType = {
