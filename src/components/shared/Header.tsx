@@ -1,7 +1,7 @@
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Logo } from "@/components/shared/Logo";
 import { useAuth } from "@/hooks/useAuth";
-import { LogOut, User, ArrowLeft, UserPlus } from "lucide-react";
+import { LogOut, User, ArrowLeft, UserPlus, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
@@ -14,6 +14,7 @@ interface HeaderProps {
   boardName?: string;
   onBack?: () => void;
   onInvite?: () => void;
+  onViewMembers?: () => void;
   onFilterChange?: (filter: string) => void;
   // Custom content to replace logo
   leftContent?: ReactNode;
@@ -26,6 +27,7 @@ export const Header = ({
   boardName,
   onBack,
   onInvite,
+  onViewMembers,
   onFilterChange,
   leftContent
 }: HeaderProps) => {
@@ -79,6 +81,17 @@ export const Header = ({
 
         <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
           <ThemeToggle />
+          {onViewMembers && (
+            <Button
+              onClick={onViewMembers}
+              variant="outline"
+              className="w-full sm:w-auto"
+              aria-label="View board members"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Membres
+            </Button>
+          )}
           {onInvite && (
             <Button
               onClick={onInvite}
