@@ -77,4 +77,29 @@
   #root {
     min-height: 100vh;
   }
+
+  /* Couleurs Kanban - utility classes */
+  .bg-todo {
+    background-color: var(--color-todo);
+  }
+
+  .bg-doing {
+    background-color: var(--color-doing);
+  }
+
+  .bg-done {
+    background-color: var(--color-done);
+  }
+
+  .text-todo {
+    color: var(--color-todo);
+  }
+
+  .text-doing {
+    color: var(--color-doing);
+  }
+
+  .text-done {
+    color: var(--color-done);
+  }
 }
