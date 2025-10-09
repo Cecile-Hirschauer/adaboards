@@ -1,7 +1,7 @@
 // Custom hook for managing board members with React Query
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
-import type { Member, MemberRole, User } from '../types';
+import type { MemberRole } from '../types';
 
 const MEMBERS_QUERY_KEY = (boardId: string) => ['boards', boardId, 'members'];
 
