@@ -2,17 +2,10 @@
 import { API_BASE_URL } from '../utils/constants';
 import { authStorage } from '../utils/auth';
 
-/**
- * Mode mock : Détermine si on utilise des données mockées ou l'API réelle
- *
- * Priorité :
- * 1. Variable d'environnement VITE_USE_MOCK (true/false)
- * 2. Sinon : false par défaut (utilise l'API réelle)
- *
- * Pour utiliser le mode mock :
- * - Créer un fichier .env avec VITE_USE_MOCK=true
- */
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK;
+// Log de l'API URL au démarrage (dev only)
+if (import.meta.env.DEV) {
+  console.log(`[API] Base URL: ${API_BASE_URL}`);
+}
 
 class ApiClient {
   private getAuthToken(): string | null {
