@@ -114,9 +114,20 @@ export default function Boards() {
             >
               {/* Board Header */}
               <div className="flex justify-between items-start mb-3 sm:mb-4">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-[rgb(var(--foreground))] break-words pr-2">
-                  {board.name}
-                </h2>
+                <div className="flex-1">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-[rgb(var(--foreground))] break-words pr-2">
+                    {board.name}
+                  </h2>
+                  {board.role && (
+                    <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded ${
+                      board.role === 'OWNER' ? 'bg-[rgb(var(--primary))]/10 text-[rgb(var(--primary))]' :
+                      board.role === 'MAINTAINER' ? 'bg-blue-500/10 text-blue-500' :
+                      'bg-[rgb(var(--muted))]/50 text-[rgb(var(--muted-foreground))]'
+                    }`}>
+                      {board.role}
+                    </span>
+                  )}
+                </div>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();

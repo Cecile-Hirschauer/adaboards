@@ -44,5 +44,11 @@ export default defineConfig({
   // Optimize dependencies
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],
+  },
+  // Configure Vitest
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**', '**/.{idea,git,cache,output,temp}/**'],
   }
 })

@@ -32,6 +32,11 @@ class ApiClient {
       throw new Error(`API Error: ${response.statusText}`);
     }
 
+    // Handle 204 No Content (e.g., DELETE requests)
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
     return response.json();
   }
 }

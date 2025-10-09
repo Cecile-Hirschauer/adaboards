@@ -1,5 +1,6 @@
 // Auth Provider pour gérer l'état d'authentification globalement
 import { useState, useEffect, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
 import { authStorage } from '@/utils/auth';
@@ -16,6 +17,7 @@ import type { User } from '@/types';
  * - Le chargement initial depuis localStorage
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -113,9 +115,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('[AuthContext] Logout - Nettoyage du cache React Query');
     queryClient.clear();
 
-    // Rediriger vers la page d'accueil (Landing) avec un rechargement complet
-    console.log('[AuthContext] Logout - Redirection vers / avec window.location');
-    window.location.href = '/';
+    // Rediriger vers la page d'accueil (Landing)
+    console.log('[AuthContext] Logout - Redirection vers /');
+    navigate('/', { replace: true });
   };
 
   const value: AuthContextType = {
