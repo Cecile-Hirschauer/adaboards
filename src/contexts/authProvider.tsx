@@ -3,6 +3,7 @@ import { useState, useEffect, ReactNode } from 'react';
 import { api } from '@/services/api';
 import { authStorage } from '@/utils/auth';
 import { AuthContext, type AuthContextType } from './authContext';
+import type { User } from '@/types';
 
 /**
  * Provider d'authentification

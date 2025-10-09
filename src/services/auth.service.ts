@@ -63,6 +63,13 @@ class AuthService {
     localStorage.removeItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(LOCAL_STORAGE_KEYS.USER);
   }
+
+  async validateToken(token: string): Promise<{ valid: boolean }> {
+    return this.request('/auth/validate', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
 }
 
 export const authService = new AuthService();

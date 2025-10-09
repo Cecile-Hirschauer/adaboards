@@ -23,7 +23,7 @@ export function useTasks(boardId: string) {
   // Mutation for creating a task
   const createTaskMutation = useMutation({
     mutationFn: (data: { title: string; status: TaskStatus; description?: string }) =>
-      api.createTask(boardId, data),
+      api.createTask(boardId, { ...data, boardId }),
     onSuccess: (newTask) => {
       // Mettre à jour le cache avec la nouvelle tâche
       queryClient.setQueryData<Task[]>(getTasksQueryKey(boardId), (old = []) => [...old, newTask]);
