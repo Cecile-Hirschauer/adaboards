@@ -1,5 +1,6 @@
 // Auth Provider pour gérer l'état d'authentification globalement
 import { useState, useEffect, ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
 import { authStorage } from '@/utils/auth';
 import { AuthContext, type AuthContextType } from './authContext';
@@ -15,6 +16,7 @@ import type { User } from '@/types';
  * - Le chargement initial depuis localStorage
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +56,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
   const login = async (email: string, password: string) => {
     try {
+      // Vider le cache React Query avant la connexion pour éviter les données résiduelles
+      queryClient.clear();
+
       const response = await api.login(email, password);
 
       // Sauvegarder dans le state
@@ -74,6 +79,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
   const register = async (email: string, password: string, name: string) => {
     try {
+      // Vider le cache React Query avant l'inscription pour éviter les données résiduelles
+      queryClient.clear();
+
       const response = await api.register(email, password, name);
 
       // Sauvegarder dans le state
@@ -100,6 +108,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setToken(null);
     authStorage.clear();
+
+    // Vider le cache React Query pour éviter d'afficher les données de l'ancien utilisateur
+    console.log('[AuthContext] Logout - Nettoyage du cache React Query');
+    queryClient.clear();
 
     // Rediriger vers la page d'accueil (Landing) avec un rechargement complet
     console.log('[AuthContext] Logout - Redirection vers / avec window.location');

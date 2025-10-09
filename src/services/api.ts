@@ -4,8 +4,6 @@ import { authService } from './auth.service';
 import { boardService } from './board.service';
 import { taskService } from './task.service';
 import { memberService } from './member.service';
-import { USE_MOCK } from './apiClient';
-import { mockAuth } from '../utils/mockAuth';
 
 /**
  * Unified API service that delegates to specialized services.
@@ -14,67 +12,18 @@ import { mockAuth } from '../utils/mockAuth';
 class ApiService {
   // Auth methods - delegate to authService
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
-    if (USE_MOCK) {
-      // Simuler un délai réseau
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Vérifier que l'utilisateur existe et que le mot de passe est correct
-      const user = mockAuth.authenticate(email, password);
-
-      if (!user) {
-        throw new Error('Email ou mot de passe incorrect');
-      }
-
-      return Promise.resolve({
-        user,
-        token: 'mock-jwt-token-' + Date.now(),
-      });
-    }
-
     return authService.login(email, password);
   }
 
   async register(email: string, password: string, name: string): Promise<{ user: User; token: string }> {
-    if (USE_MOCK) {
-      // Simuler un délai réseau
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Vérifier que l'email n'est pas déjà utilisé
-      if (mockAuth.userExists(email)) {
-        throw new Error('Cet email est déjà utilisé');
-      }
-
-      // Créer le nouvel utilisateur
-      const user: User = {
-        id: Date.now().toString(),
-        email,
-        name,
-        createdAt: new Date(),
-      };
-
-      // Sauvegarder l'utilisateur dans le mock storage
-      mockAuth.saveUser(email, password, user);
-
-      return Promise.resolve({
-        user,
-        token: 'mock-jwt-token-' + Date.now(),
-      });
-    }
-
     return authService.register(email, password, name);
   }
 
   async logout(): Promise<void> {
-    if (USE_MOCK) {
-      return Promise.resolve();
-    }
     return authService.logout();
   }
 
   async validateToken(token: string): Promise<{ valid: boolean }> {
-    if (USE_MOCK) {
-      return Promise.resolve({ valid: !!token });
-    }
     return authService.validateToken(token);
   }
 
@@ -149,4 +98,3 @@ export { authService } from './auth.service';
 export { boardService } from './board.service';
 export { taskService } from './task.service';
 export { memberService } from './member.service';
-export { USE_MOCK } from './apiClient';
