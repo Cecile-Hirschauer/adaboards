@@ -11,6 +11,7 @@ export interface Board {
   id: string;
   name: string;
   updated_at: string;
+  role?: MemberRole;
 }
 
 export interface Task {

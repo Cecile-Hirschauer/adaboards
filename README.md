@@ -61,7 +61,8 @@ A modern, offline-first React + TypeScript project management application with K
 - ✅ **Hot reload**: Vite HMR
 - ✅ **ESLint**: Code quality enforcement
 - ✅ **Documentation**: Detailed inline comments
-- ✅ **Testing**: Vitest for unit tests
+- ✅ **Unit Testing**: Vitest for component and utility tests
+- ✅ **E2E Testing**: Playwright for end-to-end tests
 - ✅ **Utility functions**: Relative date formatting with full test coverage
 
 ## 🚀 Performance
@@ -93,7 +94,8 @@ A modern, offline-first React + TypeScript project management application with K
 - **Icons**: Lucide React
 - **Fonts**: Inter + Dancing Script
 - **Linting**: ESLint 9
-- **Testing**: Vitest
+- **Unit Testing**: Vitest
+- **E2E Testing**: Playwright
 
 ## 🛠️ Installation
 
@@ -113,8 +115,16 @@ npm run preview
 # Lint code
 npm run lint
 
-# Run tests
+# Run unit tests
 npm test
+npm run test:ui
+
+# Run E2E tests
+npm run test:e2e
+npm run test:e2e:ui
+npm run test:e2e:headed
+npm run test:e2e:debug
+npm run test:e2e:report
 ```
 
 ## 📁 Project Structure
@@ -165,6 +175,10 @@ src/
     ├── auth.ts                 # Auth storage helpers
     ├── mockAuth.ts             # Mock user management
     └── constants.ts            # App constants
+
+e2e/                            # Playwright E2E tests
+├── auth.spec.ts                # Authentication flow tests
+└── boards.spec.ts              # Board management tests
 ```
 
 ## 🎨 CSS Architecture
@@ -269,7 +283,7 @@ VITE_API_BASE_URL=https://your-api.com
 
 ## 🧪 Testing
 
-### Test with Vitest
+### Unit Tests with Vitest
 
 ```bash
 # Run tests
@@ -278,42 +292,79 @@ npm test
 # Run tests in watch mode
 npm run test:watch
 
+# Run tests with UI
+npm run test:ui
+
 # Run tests with coverage
 npm run test:coverage
 ```
 
-### Utility Tests
+**Utility Tests Coverage:**
+- ✅ **relativeDate.ts**: Converts timestamps to human-readable relative dates
+  - "now" (< 1 minute)
+  - "X minute(s) ago" (< 1 hour)
+  - "X hour(s) ago" (< 1 day)
+  - "X day(s) ago" (< 1 week)
+  - "X week(s) ago" (< 1 month)
+  - "X month(s) ago" (≥ 1 month)
 
-**relativeDate.ts**: Converts timestamps to human-readable relative dates
-- ✅ "now" (< 1 minute)
-- ✅ "X minute(s) ago" (< 1 hour)
-- ✅ "X hour(s) ago" (< 1 day)
-- ✅ "X day(s) ago" (< 1 week)
-- ✅ "X week(s) ago" (< 1 month)
-- ✅ "X month(s) ago" (≥ 1 month)
+### E2E Tests with Playwright
 
-### Test Authentication
+**Prerequisites:**
+- Backend API must be running on `http://localhost:3000`
+- Frontend dev server must be running on `http://localhost:5173`
+- Playwright automatically starts both servers before running tests
 
 ```bash
-1. Go to /signup → Create account (email, password, name)
-2. Check localStorage → 'adaboards_auth_token' exists ✅
-3. Logout → Token cleared ✅
-4. Try login with wrong password → Error message ✅
-5. Login with correct credentials → Redirected to /boards ✅
-6. Try accessing /login while authenticated → Redirected to /boards ✅
-7. Try accessing /boards while logged out → Redirected to /login ✅
+# Install Playwright browsers (first time only)
+npx playwright install
+
+# Run E2E tests (headless)
+npm run test:e2e
+
+# Run E2E tests with UI mode (recommended for development)
+npm run test:e2e:ui
+
+# Run E2E tests with visible browser
+npm run test:e2e:headed
+
+# Run E2E tests in debug mode
+npm run test:e2e:debug
+
+# Show HTML test report
+npm run test:e2e:report
 ```
 
-### Test localStorage persistence
+**Browser Support:**
+- ✅ **Chromium** (Chrome/Edge) - Full support
+- ⚠️ **Firefox** - Disabled on Windows (compatibility issues)
+- ⚠️ **Webkit** (Safari) - Disabled on Windows (compatibility issues)
 
+> **Note**: Tests run on Chromium by default. To enable Firefox/Webkit on Linux/Mac, uncomment the browser configurations in `playwright.config.ts`.
+
+**E2E Test Coverage:**
+
+**Authentication Flow** (`e2e/auth.spec.ts`):
+- ✅ Register new user and login
+- ✅ Show error with invalid credentials
+- ✅ Redirect to login when accessing protected route
+- ✅ Redirect to boards when accessing login while authenticated
+
+**Board Management** (`e2e/boards.spec.ts`):
+- ✅ Create a new board via prompt
+- ✅ Open a board and view columns (with To Do/Doing/Done columns)
+- ✅ Delete a board (requires OWNER role)
+
+### Manual Testing Scenarios
+
+**Test localStorage persistence:**
 ```bash
 1. Open app → Create boards/tasks
 2. DevTools → Application → Local Storage → Check 'adaboards-cache'
 3. Reload page → Data appears instantly ✅
 ```
 
-### Test offline mode
-
+**Test offline mode:**
 ```bash
 1. DevTools → Network → Check "Offline"
 2. Reload page → App still works ✅
@@ -321,8 +372,7 @@ npm run test:coverage
 4. Uncheck "Offline" → Auto sync ✅
 ```
 
-### Test synchronization
-
+**Test synchronization:**
 ```bash
 1. Open app in 2 tabs
 2. Create task in tab 1

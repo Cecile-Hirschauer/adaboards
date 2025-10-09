@@ -41,7 +41,29 @@ export function useBoards() {
   // Mutation for deleting a board
   const deleteBoardMutation = useMutation({
     mutationFn: (id: string) => api.deleteBoard(id),
-    onSuccess: () => {
+    onMutate: async (boardId) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: BOARDS_QUERY_KEY });
+
+      // Snapshot the previous value
+      const previousBoards = queryClient.getQueryData<Board[]>(BOARDS_QUERY_KEY);
+
+      // Optimistically update to remove the board
+      queryClient.setQueryData<Board[]>(BOARDS_QUERY_KEY, (old) =>
+        old ? old.filter((board) => board.id !== boardId) : []
+      );
+
+      // Return context with previous value
+      return { previousBoards };
+    },
+    onError: (err, boardId, context) => {
+      // Rollback on error
+      if (context?.previousBoards) {
+        queryClient.setQueryData(BOARDS_QUERY_KEY, context.previousBoards);
+      }
+    },
+    onSettled: () => {
+      // Refetch to ensure consistency
       queryClient.invalidateQueries({ queryKey: BOARDS_QUERY_KEY });
     },
   });
